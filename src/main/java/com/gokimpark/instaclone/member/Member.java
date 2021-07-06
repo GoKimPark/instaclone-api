@@ -1,6 +1,7 @@
 package com.gokimpark.instaclone.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gokimpark.instaclone.account.MemberJoinInfo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,4 +25,15 @@ public class Member {
 
     @JsonIgnore
     private String password;
+
+    public Member(){}
+    public Member(MemberJoinInfo member){
+        this.email = member.getEmail();
+        this.PhoneNumber = member.getPhoneNumber();
+        this.UserId = member.getUserId();
+        this.UserName = member.getUserName();
+        this.password = member.getPassword();
+    }
+
+
 }

@@ -17,4 +17,24 @@ public class MemberJoinInfo  {
 
     @NotEmpty
     private String password;
+
+    public String getPhoneNumber() {
+        return PhoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getUserId() {
+        return UserId;
+    }
+
+    public String getUserName() {
+        return UserName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }

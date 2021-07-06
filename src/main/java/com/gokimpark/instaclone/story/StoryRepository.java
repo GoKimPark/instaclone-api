@@ -1,20 +1,15 @@
 package com.gokimpark.instaclone.story;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface StoryRepository extends Repository<Story, String> {
+    @Query("select story from Story story where story.StoryId =:id")
+    @Transactional(readOnly = true)
+    Story getStoryById(@Param("id") String StoryId);
 
-@Repository
-public class StoryRepository {
-    private final Map<Long, Story> store = new HashMap<>();
-    private Long sequence = 0L;
-
-    public Story getStoryById(String StoryId){
-        return store.get(StoryId);
-    }
-    public void save(Story story){
-        story.setStoryId(++sequence);
-        store.put(story.getStoryId(), story);
-    }
+    void save(Story story);
+    void delete(String id);
 }

@@ -10,30 +10,27 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
     public AccountController(MemberRepository memberRepository){
         this.memberRepository = memberRepository;
     }
 
-    @ResponseBody
     @GetMapping("/emailsignup/")
     public String SignUp(){
         return "signUp";
     }
 
-    @ResponseBody
     @PostMapping("/emailsignup/")
     public Member SignUp(@Valid @RequestBody MemberJoinInfo memberJoinInfo){
-        Member member = this.memberRepository.save(memberJoinInfo);
+        Member member = memberRepository.save(memberJoinInfo);
         return member;
     }
 
-    @ResponseBody
     @PostMapping("/login/")
     public Member Login(@Valid @RequestBody MemberLoginInfo memberLoginInfo){
-        Member member = this.memberRepository.findById(memberLoginInfo.getEmail());
+        Member member = memberRepository.findById(memberLoginInfo.getEmail());
         return member;
     }
 

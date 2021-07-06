@@ -1,23 +1,15 @@
 package com.gokimpark.instaclone.post;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface PostRepository extends Repository<Post, String> {
+    @Query("select post from Post post where post.PostId =:id")
+    @Transactional(readOnly = true)
+    Post getPostById(@Param("id") String PostId);
 
-@Repository
-public class PostRepository {
-    private final Map<Long, Post> store = new HashMap<>();
-    private Long sequence = 0L;
-
-    public Post getPostById(String PostId){
-        return store.get(PostId);
-    }
-    public void save(Post post){
-        post.setPostId(++sequence);
-        store.put(post.getPostId(), post);
-    }
-    public void delete(String PostId){
-        store.remove(PostId);
-    }
+    void save(Post post);
+    void delete(String Id);
 }

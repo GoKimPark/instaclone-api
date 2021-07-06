@@ -20,7 +20,7 @@ public class StoryController {
         return model;
     }
 
-    @ResponseBody
+
     @PostMapping("/{UserId}/{StoryId}/")
     public String processShowStory(@PathVariable String UserId, @PathVariable String StoryId, Model model) {
         Member member = this.memberRepository.findById(UserId);

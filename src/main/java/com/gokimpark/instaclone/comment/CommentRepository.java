@@ -1,18 +1,17 @@
 package com.gokimpark.instaclone.comment;
 
-import com.gokimpark.instaclone.comment.Comment;
-import org.springframework.stereotype.Repository;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-@Repository
-public class CommentRepository {
-    private final Map<Date, Comment> store = new HashMap<>();
+public interface CommentRepository extends Repository<Comment, String> {
+    @Transactional(readOnly = true)
+    @Cacheable("comments")
+    Collection<Comment> findById(@Param("id") String id);
 
-    public List<Comment> getComment(){
-        return new ArrayList<>(store.values());
-    }
-    public void save(Comment comment){
-        store.put(comment.getCreatedTime(), comment);
-    }
+    void save(String PostId, Comment comment);
+    void delete(String postId, String commentId);
 }

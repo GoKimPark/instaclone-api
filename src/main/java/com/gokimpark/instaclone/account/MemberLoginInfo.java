@@ -8,4 +8,8 @@ public class MemberLoginInfo {
 
     @NotEmpty
     private String password;
+
+    public String getEmail() {
+        return email;
+    }
 }
