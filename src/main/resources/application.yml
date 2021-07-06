@@ -1,0 +1,14 @@
+server:
+  port: 8082  # Spring boot Server port
+
+spring:
+  h2:
+    console:
+      enabled: true  # H2 웹 콘솔을 사용하겠다는 의미
+      path: /test_h2  # 콘솔의 경로
+
+  datasource:
+        url: jdbc:h2:tcp://localhost/~/jpashop
+        username: sa
+        password:
+        driver-class-name: org.h2.Driver #h2 드라이버 설정
