@@ -10,7 +10,7 @@ public class Post {
     @Id @GeneratedValue
     private Long PostId;
 
-    @Column(name = "user_id")
+    @Column(name = "post_owner_id")
     private String UserId;
 
     private String PostPhoto;
