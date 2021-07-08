@@ -8,7 +8,8 @@ import javax.persistence.*;
 public class Following {
 
     @Id @Column(name = "following_member_email")
-    @ManyToOne @JoinColumn(name = "email")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "email")
     private Member UserId;
 
     public Following(){}
