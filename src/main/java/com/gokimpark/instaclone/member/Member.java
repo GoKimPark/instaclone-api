@@ -10,28 +10,34 @@ import javax.persistence.Id;
 @Entity
 public class Member {
     @Id
-    @Column(name = "USER_EMAIL")
+    @Column(name = "member_email", nullable = false)
     private String email;
 
     private String ProfilePhoto;
-    private String UserName;
-    private String UserId;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String id;
 
     private String Website;
     private String bio;
 
+    @Column(nullable = false)
     private String PhoneNumber;
     private String gender;
 
     @JsonIgnore
+    @Column(nullable = false)
     private String password;
 
     public Member(){}
     public Member(MemberJoinInfo member){
         this.email = member.getEmail();
         this.PhoneNumber = member.getPhoneNumber();
-        this.UserId = member.getUserId();
-        this.UserName = member.getUserName();
+        this.id = member.getUserId();
+        this.name = member.getUserName();
         this.password = member.getPassword();
     }
 

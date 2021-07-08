@@ -5,15 +5,17 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Comment {
-    @Id
-    @Column(name = "POST_ID")
+    @Id @GeneratedValue
+    @Column(name = "comment_id")
     private Long id;
 
-    @Column(name = "USER_ID")
+    @Column(name = "comment_writer_id")
     private String UserId;
 
     private String comment;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime CreatedTime;
+
+    public Comment(){}
+    public Comment(String UserId, Comment comment){}
 }

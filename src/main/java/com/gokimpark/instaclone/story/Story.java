@@ -5,12 +5,12 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Story {
-    @Id
-    @Column(name = "USER_EMAIL")
-    private String id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime StoryId;
+    @Id @GeneratedValue
+    private Long StoryId;
+
+    @Column(name = "story_owner_id")
+    private String UserId;
+
     private String StoryPhoto;
-
 }
