@@ -1,15 +1,9 @@
 package com.gokimpark.instaclone.story;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StoryRepository extends Repository<Story, String> {
-    @Query("select story from Story story where story.StoryId =:id")
-    @Transactional(readOnly = true)
-    Story getStoryById(@Param("id") String StoryId);
+import java.util.List;
 
-    void save(Story story);
-    void delete(String id);
+public interface StoryRepository extends JpaRepository<Story, Long> {
+    List<Story> findAllByUserId(String id);
 }
