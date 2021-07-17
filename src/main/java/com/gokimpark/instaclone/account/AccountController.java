@@ -1,20 +1,15 @@
 package com.gokimpark.instaclone.account;
 
+import com.gokimpark.instaclone.member.MemberService;
 import com.gokimpark.instaclone.member.Member;
-import com.gokimpark.instaclone.member.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
-    private final MemberRepository memberRepository;
-
-    @Autowired
-    public AccountController(MemberRepository memberRepository){
-        this.memberRepository = memberRepository;
+    private final MemberService memberService;
+    public AccountController(MemberService memberService){
+        this.memberService = memberService;
     }
 
     @GetMapping("/emailsignup/")
@@ -23,15 +18,13 @@ public class AccountController {
     }
 
     @PostMapping("/emailsignup/")
-    public Member SignUp(@Valid @RequestBody MemberJoinInfo memberJoinInfo){
-        Member member = memberRepository.save(memberJoinInfo);
-        return member;
+    public Member SignUp(@RequestBody Member joinForm){
+        return memberService.singUp(joinForm);
     }
 
     @PostMapping("/login/")
-    public Member Login(@Valid @RequestBody MemberLoginInfo memberLoginInfo){
-        Member member = memberRepository.findById(memberLoginInfo.getEmail());
-        return member;
+    public Member Login(@RequestBody AccountLoginForm loginForm){
+        return memberService.Login(loginForm);
     }
 
 }

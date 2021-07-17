@@ -1,18 +1,20 @@
 package com.gokimpark.instaclone.profile;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequiredArgsConstructor
 public class ProfileController {
-
     private final ProfileService profileService;
 
+    public ProfileController(ProfileService profileService){
+        this.profileService = profileService;
+    }
+
     @GetMapping("/{userId}")
-    ProfileDto readProfile(@PathVariable("userId") String userId) {
-        return ProfileDto.from(profileService.getProfile(userId));
+    ProfileDto getProfile(@PathVariable String userId) {
+        return profileService.getProfile(userId);
+        //return ProfileDto.from(profileService.getProfile(userId));
     }
 }
