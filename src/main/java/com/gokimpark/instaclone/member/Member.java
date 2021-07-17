@@ -1,7 +1,10 @@
 package com.gokimpark.instaclone.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gokimpark.instaclone.account.AccountJoinForm;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +13,7 @@ import javax.persistence.Lob;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
     @Id
     @Column(unique = true)
@@ -37,11 +41,18 @@ public class Member {
     @JsonIgnore
     private String password;
 
-    protected Member(){
+    public Member(AccountJoinForm joinForm){
+        this.id = joinForm.getId();
+        this.email = joinForm.getEmail();
+        this.name = joinForm.getName();
+        this.phoneNumber = joinForm.getPhoneNumber();
+        this.password = joinForm.getPassword();
+
         this.postCnt = 0L;
         this.followerCnt = 0L;
         this.followingCnt = 0L;
     }
+
 
     // set
     public void postCountInc(){
