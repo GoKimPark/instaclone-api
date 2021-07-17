@@ -1,16 +1,33 @@
 package com.gokimpark.instaclone.follow;
 
 import com.gokimpark.instaclone.member.Member;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-@Entity
+//@Entity
+@NoArgsConstructor
+//@IdClass(Following.PK.class)
 public class Following {
 
-    @Id @Column(name = "following_member_email")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "email")
-    private Member UserId;
+    /*
+    @Id
+    private String followerEmail;
 
-    public Following(){}
+    @Id
+    private String followingEmail;
+
+    @ManyToOne
+    @JoinColumn(name = "followerEmail")
+    private Member follower;
+
+    @ManyToOne
+    @JoinColumn(name = "followingEmail")
+    private Member following;
+
+    public static class PK implements Serializable {
+        private String followerEmail;
+        private String followingEmail;
+    }*/
 }
