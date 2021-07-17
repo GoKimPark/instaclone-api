@@ -18,8 +18,8 @@ public class AccountController {
     }
 
     @PostMapping("/emailsignup/")
-    public Member SignUp(@RequestBody Member joinForm){
-        return memberService.singUp(joinForm);
+    public Member SignUp(@RequestBody AccountJoinForm joinForm){
+        return memberService.signUp(joinForm);
     }
 
     @PostMapping("/login/")
