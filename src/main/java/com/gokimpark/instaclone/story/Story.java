@@ -1,16 +1,21 @@
 package com.gokimpark.instaclone.story;
 
+import com.gokimpark.instaclone.member.Member;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Story {
-
     @Id @GeneratedValue
-    private Long StoryId;
+    @Column(name = "story_id", unique = true)
+    private Long id;
 
-    @Column(name = "story_owner_id")
-    private String UserId;
-
-    private String StoryPhoto;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Member member;
 }
