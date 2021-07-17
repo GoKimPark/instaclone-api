@@ -1,5 +1,6 @@
 package com.gokimpark.instaclone.profile;
 
+import com.gokimpark.instaclone.story.Story;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,8 +14,12 @@ public class ProfileController {
     }
 
     @GetMapping("/{userId}")
-    ProfileDto getProfile(@PathVariable String userId) {
-        return profileService.getProfile(userId);
-        //return ProfileDto.from(profileService.getProfile(userId));
+    public ProfileDto findProfile(@PathVariable String userId) {
+        return profileService.findProfile(userId);
+    }
+
+    @GetMapping("/stories/highlights/{storyId}/")
+    public Story findStoryByStoryId(@PathVariable Long storyId){
+        return profileService.findStoryByStoryId(storyId);
     }
 }

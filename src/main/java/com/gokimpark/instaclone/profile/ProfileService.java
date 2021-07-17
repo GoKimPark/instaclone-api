@@ -3,6 +3,7 @@ package com.gokimpark.instaclone.profile;
 import com.gokimpark.instaclone.member.Member;
 import com.gokimpark.instaclone.member.MemberService;
 import com.gokimpark.instaclone.post.PostService;
+import com.gokimpark.instaclone.story.Story;
 import com.gokimpark.instaclone.story.StoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class ProfileService {
 
     ModelMapper mapper = new ModelMapper();
 
-    public ProfileDto getProfile(String userId) {
+    public ProfileDto findProfile(String userId) {
         Member member = memberService.findByUserId(userId);
 
         ProfileDto profile = new ProfileDto();
@@ -31,6 +32,10 @@ public class ProfileService {
         profile.setStories(mapper.map(storyService.findAllByUserId(member.getId()), ProfileStoryDto.class));
 
         return profile;
+    }
+
+    public Story findStoryByStoryId(Long id) {
+        return storyService.findOneByStoryId(id);
     }
 }
 
