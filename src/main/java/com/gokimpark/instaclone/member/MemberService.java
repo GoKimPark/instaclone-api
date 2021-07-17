@@ -1,5 +1,6 @@
 package com.gokimpark.instaclone.member;
 
+import com.gokimpark.instaclone.account.AccountJoinForm;
 import com.gokimpark.instaclone.account.AccountLoginForm;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,8 @@ public class MemberService {
 
     ModelMapper mapper = new ModelMapper();
 
-    public Member singUp(Member joinForm) {
-        Member member = mapper.map(joinForm, Member.class);
-        return memberRepository.save(member);
+    public Member signUp(AccountJoinForm joinForm) {
+        return memberRepository.save(new Member(joinForm));
     }
 
     public Member Login(AccountLoginForm loginForm){
