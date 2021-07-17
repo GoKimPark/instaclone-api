@@ -1,22 +1,24 @@
 package com.gokimpark.instaclone.post;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.gokimpark.instaclone.image.Image;
+import com.gokimpark.instaclone.member.Member;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
     @Id @GeneratedValue
-    private Long PostId;
+    @Column(name = "post_id", unique = true)
+    private Long postId;
 
-    @Column(name = "post_owner_id")
-    private String UserId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Member member;
 
-    private String PostPhoto;
-    private String caption;
-    // tag
-    private String location;
-
-    public Post(){}
+   // @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+   //  private Set<Image> images;
 }
