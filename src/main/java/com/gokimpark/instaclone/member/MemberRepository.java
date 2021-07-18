@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface MemberRepository extends JpaRepository<Member, String> {
 
-   @Query("SELECT m FROM Member m WHERE m.id = :id")
-   @Transactional(readOnly = true)
-   Member findByUserId(String id);
+    @Query("SELECT m FROM Member m WHERE m.id = :id")
+    @Transactional(readOnly = true)
+    Member findByUserId(String id);
 }

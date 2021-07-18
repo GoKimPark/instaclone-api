@@ -5,5 +5,5 @@ import java.util.List;
 
 @Data
 public class ProfileStoryDto {
-    List<String> storyUrl;
+    String storyUrl;
 }

@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class ProfilePostDto {
-    List<String> imageUrl;
+    String imageUrl;
 }
