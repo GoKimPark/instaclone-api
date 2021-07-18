@@ -2,6 +2,7 @@ package com.gokimpark.instaclone.account;
 
 import com.gokimpark.instaclone.member.MemberService;
 import com.gokimpark.instaclone.member.Member;
+import com.gokimpark.instaclone.profile.ProfileMemberInfoDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,4 +28,17 @@ public class AccountController {
         return memberService.Login(loginForm);
     }
 
+    /*
+    @PostMapping("/edit/")
+    public AccountEditDto getProfileEdit(@RequestBody Member member){
+        return memberService.findEditInfo(member);
+    }
+
+    @PostMapping("/edit/")
+    public AccountEditDto setProfileEdit (
+            @RequestBody String memberPK,
+            @RequestBody AccountEditDto editInfo){
+        return memberService.editProfile(memberPK, editInfo);
+    }
+     */
 }
