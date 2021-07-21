@@ -7,7 +7,7 @@ public class AccountEditDto {
     String profileImageUrl;
 
     String name;
-    String id;
+    String username;
     String webSite;
     String bio;
 

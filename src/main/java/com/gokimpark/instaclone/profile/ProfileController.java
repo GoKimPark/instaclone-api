@@ -13,9 +13,9 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
-    @GetMapping("/{userId}")
-    public ProfileDto findProfile(@PathVariable String userId) {
-        return profileService.findProfile(userId);
+    @GetMapping("/{username}")
+    public ProfileDto findProfile(@PathVariable String username) {
+        return profileService.findProfile(username);
     }
 
     @GetMapping("/stories/highlights/{storyId}/")

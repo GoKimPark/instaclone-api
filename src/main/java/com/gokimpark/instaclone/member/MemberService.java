@@ -3,7 +3,6 @@ package com.gokimpark.instaclone.member;
 import com.gokimpark.instaclone.account.AccountEditDto;
 import com.gokimpark.instaclone.account.AccountJoinForm;
 import com.gokimpark.instaclone.account.AccountLoginForm;
-import com.gokimpark.instaclone.profile.ProfileMemberInfoDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +22,18 @@ public class MemberService {
     }
 
     public Member Login(AccountLoginForm loginForm){
-        return memberRepository.findById(loginForm.getEmail()).get();
+        // email, id 한번에 받는 것 처리
+        String email ="";
+        String userName ="";
+        String phoneNumber="";
+        return memberRepository.findByEmailOrUsernameOrPhoneNumber(email, userName, phoneNumber);
+    }
+    public Member findByUserEmail(String email) {
+        return memberRepository.findById(email).get();
     }
 
-    public Member findByUserId(String id) {
-        return memberRepository.findByUserId(id);
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username);
     }
 
     public AccountEditDto findEditInfo(Member member) {
@@ -38,7 +44,7 @@ public class MemberService {
     public AccountEditDto editProfile(String memberPK, AccountEditDto editInfo) {
         Member member = memberRepository.findById(memberPK).get();
 
-        member.setId(editInfo.getId());
+        member.setName(editInfo.getName());
         member.setEmail(editInfo.getEmail());
         member.setWebsite(editInfo.getWebSite());
         member.setBio(editInfo.getBio());

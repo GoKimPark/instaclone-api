@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 public class AccountJoinForm {
     String phoneNumber;
     String email;
-    String id;
+    String username;
     String name;
 
     //@NotEmpty

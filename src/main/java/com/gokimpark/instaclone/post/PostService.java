@@ -15,29 +15,30 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final MemberService memberService;
+
     public PostService(PostRepository postRepository, MemberService memberService){
         this.postRepository = postRepository;
         this.memberService = memberService;
     }
 
-    public List<Post> findAllByUserId(String userId){
-        return postRepository.findAllByUserId(userId);
+    public List<Post> findAllByUser₩name(String username){
+        return postRepository.findAllByUsername(username);
     }
 
-    public Post findOneByPostId(Long postId){
-        return postRepository.findById(postId).get();
+    public Post findByPostId(Long postId){
+        return postRepository.getById(postId);
     }
 
     public void save(Post post){
         postRepository.save(post);
-        Member member = memberService.findByUserId(post.getMember().getId());
+        Member member = memberService.findByUserEmail(post.getMember().getEmail());
         member.postCountInc();
     }
 
     public void delete(Long postId){
         Post post = postRepository.findById(postId).get();
         postRepository.delete(post);
-        Member member = memberService.findByUserId(post.getMember().getId());
+        Member member = memberService.findByUserEmail(post.getMember().getEmail());
         member.postCountDec();
     }
 }

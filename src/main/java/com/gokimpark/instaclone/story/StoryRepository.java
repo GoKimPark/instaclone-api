@@ -8,7 +8,5 @@ import java.util.List;
 
 public interface StoryRepository extends JpaRepository<Story, Long> {
 
-    @Query("SELECT s FROM Story s WHERE s.member.id = :id")
-    @Transactional(readOnly = true)
-    List<Story> findAllByUserId(String id);
+    List<Story> findAllByUsername(String username);
 }

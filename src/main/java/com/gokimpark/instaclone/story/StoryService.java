@@ -17,8 +17,8 @@ public class StoryService {
     public Story save(Story story){
         return storyRepository.save(story);
     }
-    public List<Story> findAllByUserId(String id){
-        return storyRepository.findAllByUserId(id);
+    public List<Story> findAllByUsername(String username){
+        return storyRepository.findAllByUsername(username);
     }
     public Story findOneByStoryId(Long id){
         return storyRepository.findById(id).get();

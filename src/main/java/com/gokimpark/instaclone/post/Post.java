@@ -5,6 +5,7 @@ import com.gokimpark.instaclone.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 @Entity
@@ -12,11 +13,11 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
     @Id @GeneratedValue
-    @Column(name = "post_id", unique = true)
-    private Long postId;
+    @Column(unique = true)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "email")
     private Member member;
 
    // @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")

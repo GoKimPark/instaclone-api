@@ -1,10 +1,9 @@
 package com.gokimpark.instaclone.post;
 
-import org.springframework.stereotype.Controller;
+import com.gokimpark.instaclone.member.Member;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/{UserId}/p/{PostId}/")
+@RestController
 public class PostController {
 
     private final PostService postService;
@@ -13,15 +12,18 @@ public class PostController {
     }
 
     @ResponseBody
-    @GetMapping("/p/{PostId}/")
-    public Post findOnePost(@PathVariable Long PostId){
-        return postService.findOneByPostId(PostId);
+    @GetMapping("/p/{postId}/")
+    public Post findByPost(@PathVariable Long postId){
+        return postService.findByPostId(postId);
     }
 
     @PostMapping
+    public Member save(Post post){
+         postService.save(post);
+         return post.getMember();
+    }
 
-
-    @DeleteMapping
+    @DeleteMapping("/p/{postId}/")
     public String delete(@PathVariable Long postId){
         postService.delete(postId);
         return "redirect:/{userId}/";

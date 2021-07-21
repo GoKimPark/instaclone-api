@@ -3,7 +3,7 @@ package com.gokimpark.instaclone.member;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/{userId}/")
+@RequestMapping("/{username}/")
 public class MemberController {
 
     private final MemberService memberService;
@@ -12,7 +12,7 @@ public class MemberController {
     }
 
     @GetMapping
-    public Member ShowProfile(@PathVariable String userId){
-        return memberService.findByUserId(userId);
+    public Member ShowProfile(@PathVariable String username){
+        return memberService.findByUsername(username);
     }
 }

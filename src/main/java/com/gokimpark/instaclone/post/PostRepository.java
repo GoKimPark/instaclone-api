@@ -8,7 +8,5 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("select p from Post p where p.member.id = :id")
-    @Transactional(readOnly = true)
-    List<Post> findAllByUserId(String id);
+    List<Post> findAllByUsername(String username);
 }

@@ -9,5 +9,4 @@ public class InstacloneApplication {
     public static void main(String[] args) {
         SpringApplication.run(InstacloneApplication.class, args);
     }
-
 }

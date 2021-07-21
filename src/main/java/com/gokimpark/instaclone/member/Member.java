@@ -26,7 +26,7 @@ public class Member {
     private String name;
 
     @Column(unique = true)
-    private String id;
+    private String username; // userId
 
     private String website;
 
@@ -37,6 +37,7 @@ public class Member {
     private Long followerCnt;
     private Long followingCnt;
 
+    @Column(unique = true)
     private String phoneNumber;
     private String gender;
 
@@ -44,7 +45,7 @@ public class Member {
     private String password;
 
     public Member(AccountJoinForm joinForm) {
-        this.id = joinForm.getId();
+        this.username = joinForm.getUsername();
         this.email = joinForm.getEmail();
         this.name = joinForm.getName();
         this.phoneNumber = joinForm.getPhoneNumber();

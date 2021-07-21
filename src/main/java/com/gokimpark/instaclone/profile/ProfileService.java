@@ -26,16 +26,16 @@ public class ProfileService {
 
     ModelMapper mapper = new ModelMapper();
 
-    public ProfileDto findProfile(String userId) {
-        Member member = memberService.findByUserId(userId);
+    public ProfileDto findProfile(String username) {
+        Member member = memberService.findByUsername(username);
 
         ProfileDto profile = new ProfileDto();
         profile.setMemberInfo(ProfileMemberInfoDto.from(member));
 
         TypeToken<List<ProfilePostDto>> postsTypeToken = new TypeToken<>() {};
-        profile.setPosts(mapper.map(postService.findAllByUserId(member.getId()), postsTypeToken.getType()));
+        profile.setPosts(mapper.map(postService.findAllByUsername(member.getName()), postsTypeToken.getType()));
         TypeToken<List<ProfileStoryDto>> storiesTypeToken = new TypeToken<>() {};
-        profile.setStories(mapper.map(storyService.findAllByUserId(member.getId()), storiesTypeToken.getType()));
+        profile.setStories(mapper.map(storyService.findAllByUsername(member.getName()), storiesTypeToken.getType()));
 
         return profile;
     }
