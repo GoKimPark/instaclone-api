@@ -21,7 +21,7 @@ public class PostService {
         this.memberService = memberService;
     }
 
-    public List<Post> findAllByUser₩name(String username){
+    public List<Post> findAllByUsername(String username){
         return postRepository.findAllByUsername(username);
     }
 

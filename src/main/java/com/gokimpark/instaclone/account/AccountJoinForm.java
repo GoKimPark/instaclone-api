@@ -2,15 +2,23 @@ package com.gokimpark.instaclone.account;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 @Data
 public class AccountJoinForm {
-    String phoneNumber;
-    String email;
-    String username;
-    String name;
 
-    //@NotEmpty
-    String password;
+    @NotBlank
+    private String phoneNumber;
+
+    @NotBlank
+    private String email;
+
+    @NotBlank
+    private String username;
+
+    @NotBlank
+    private String name;
+
+    @NotBlank
+    private String password;
 }

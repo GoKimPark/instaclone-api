@@ -3,6 +3,8 @@ package com.gokimpark.instaclone.profile;
 import com.gokimpark.instaclone.member.Member;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 public class ProfileMemberInfoDto {
 
@@ -14,14 +16,24 @@ public class ProfileMemberInfoDto {
         return dto;
     }
 
-    String profileImageUrl;
+    @NotBlank
+    private String profileImageUrl;
 
-    String id;
-    String name;
-    String bio;
-    String webSite;
+    @NotBlank
+    private String id;
 
-    String postCnt;
-    String followerCnt;
-    String followingCnt;
+    @NotBlank
+    private String name;
+
+    private String bio;
+    private String webSite;
+
+    @NotBlank
+    private String postCnt;
+
+    @NotBlank
+    private String followerCnt;
+
+    @NotBlank
+    private String followingCnt;
 }
