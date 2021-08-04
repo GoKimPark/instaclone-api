@@ -10,9 +10,9 @@ public class ProfileMemberInfoDto {
 
     public static ProfileMemberInfoDto from(Member member) {
         ProfileMemberInfoDto dto = new ProfileMemberInfoDto();
-        dto.setFollowerCnt(member.getFollowerCnt().toString());
-        dto.setFollowingCnt(member.getFollowingCnt().toString());
-        dto.setPostCnt(member.getPostCnt().toString());
+        dto.setFollowerCnt(member.getFollowerCount().toString());
+        dto.setFollowingCnt(member.getFollowingCount().toString());
+        dto.setPostCnt(member.getPostCount().toString());
         return dto;
     }
 

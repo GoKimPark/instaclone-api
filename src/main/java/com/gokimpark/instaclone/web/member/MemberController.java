@@ -2,6 +2,7 @@ package com.gokimpark.instaclone.web.member;
 
 import com.gokimpark.instaclone.domain.member.Member;
 import com.gokimpark.instaclone.domain.member.MemberService;
+import lombok.AllArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +12,14 @@ public class MemberController {
 
     private MemberService memberService;
 
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
     @PostMapping("/accounts/emailsignup/")
     public Object SignUp(@RequestBody @Validated JoinDto joinDto, BindingResult bindingResult){
+
+        System.out.println(joinDto.toString());
 
         if(bindingResult.hasErrors()){
             return bindingResult.getAllErrors();
@@ -26,20 +33,23 @@ public class MemberController {
         if(bindingResult.hasErrors()){
             return bindingResult.getAllErrors();
         }
-        return memberService.Login(loginDto);
+        Member member = memberService.Login(loginDto);
+        System.out.println(member.toString());
+        return member;
     }
 
     @GetMapping("/accounts/edit/")
-    public EditDto getProfileEdit(@RequestBody Member member){
-        return memberService.findEditInfo(member);
+    public EditDto getProfileEdit(@RequestBody String id){
+        System.out.println(id);
+        return memberService.findEditInfo(id);
     }
 
     @PostMapping("/accounts/edit/")
-    public Object setProfileEdit (@RequestBody String memberPK, @RequestBody @Validated EditDto editInfo, BindingResult bindingResult){
+    public Object setProfileEdit (@RequestBody String memberId, @RequestBody @Validated EditDto editInfo, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return bindingResult.getAllErrors();
         }
-        return memberService.modifyProfile(memberPK, editInfo);
+        return memberService.modifyProfile(memberId, editInfo);
     }
 
     @PostMapping("/{username}/")

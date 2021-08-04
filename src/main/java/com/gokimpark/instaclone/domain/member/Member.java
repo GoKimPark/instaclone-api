@@ -19,7 +19,7 @@ import javax.persistence.Lob;
 public class Member {
     @Id
     @Column(unique = true)
-    private String email;
+    private String id; // email
 
     private String profileImageUrl;
 
@@ -33,9 +33,9 @@ public class Member {
     @Lob
     private String bio;
 
-    private Long postCnt;
-    private Long followerCnt;
-    private Long followingCnt;
+    private Long postCount;
+    private Long followerCount;
+    private Long followingCount;
 
     @Column(unique = true)
     private String phoneNumber;
@@ -46,21 +46,21 @@ public class Member {
 
     public Member(JoinDto joinDto) {
         this.username = joinDto.getUsername();
-        this.email = joinDto.getJoinId();
+        this.id = joinDto.getJoinId();
         this.name = joinDto.getName();
         this.password = joinDto.getPassword();
 
-        this.postCnt = 0L;
-        this.followerCnt = 0L;
-        this.followingCnt = 0L;
+        this.postCount = 0L;
+        this.followerCount = 0L;
+        this.followingCount = 0L;
     }
 
     // set
     public void postCountInc(){
-        this.postCnt++;
+        this.postCount++;
     }
 
     public void postCountDec(){
-        this.postCnt--;
+        this.postCount--;
     }
 }
