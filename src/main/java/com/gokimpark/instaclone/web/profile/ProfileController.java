@@ -11,6 +11,10 @@ public class ProfileController {
 
     private ProfileService profileService;
 
+    public ProfileController(ProfileService profileService) {
+        this.profileService = profileService;
+    }
+
     @GetMapping("/{username}")
     public ProfileDto findProfile(@PathVariable String username) {
         return profileService.findProfile(username);

@@ -21,6 +21,12 @@ public class ProfileService {
     private PostService postService;
     private StoryService storyService;
 
+    public ProfileService(MemberService memberService, PostService postService, StoryService storyService) {
+        this.memberService = memberService;
+        this.postService = postService;
+        this.storyService = storyService;
+    }
+
     ModelMapper mapper = new ModelMapper();
 
     public ProfileDto findProfile(String username) {
