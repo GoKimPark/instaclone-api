@@ -3,6 +3,7 @@ package com.gokimpark.instaclone.web.member;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Data
 public class LoginDto {
@@ -11,5 +12,6 @@ public class LoginDto {
     private String loginId;
 
     @NotBlank
+    @Size(min = 6)
     private String password;
 }
