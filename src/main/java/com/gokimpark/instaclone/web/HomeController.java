@@ -13,7 +13,7 @@ public class HomeController {
     public String homeLogin(@SessionAttribute(name = "login_member", required = false) LoginDto loginMember, Model model){
 
         if(loginMember == null){
-            return "index";
+            return "home";
         }
 
         model.addAttribute("member", loginMember);
