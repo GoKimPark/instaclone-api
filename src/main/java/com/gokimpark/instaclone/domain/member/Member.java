@@ -55,6 +55,10 @@ public class Member {
         this.followingCount = 0L;
     }
 
+    Boolean isEqualPassword(String password){
+        return this.password.equals(password);
+    }
+
     // set
     public void postCountInc(){
         this.postCount++;
