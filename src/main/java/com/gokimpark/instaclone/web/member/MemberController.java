@@ -2,11 +2,14 @@ package com.gokimpark.instaclone.web.member;
 
 import com.gokimpark.instaclone.domain.member.Member;
 import com.gokimpark.instaclone.domain.member.MemberService;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+
+@Slf4j
 @RestController
 public class MemberController {
 
@@ -16,33 +19,52 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+    @GetMapping("/accounts/emailsignup/")
+    public String SignUp(@ModelAttribute("joinDto") JoinDto joinDto){
+        return "account/join";
+    }
+
     @PostMapping("/accounts/emailsignup/")
     public Object SignUp(@RequestBody @Validated JoinDto joinDto, BindingResult bindingResult){
-
         System.out.println(joinDto.toString());
-
         if(bindingResult.hasErrors()){
             return bindingResult.getAllErrors();
+            //return "account/join";
         }
-        return memberService.signUp(joinDto);
+        memberService.signUp(joinDto);
+        return "loginHome";
+    }
+
+    @GetMapping("/accounts/login/")
+    public String Login(@ModelAttribute("loginDto") LoginDto loginDto){
+        return "account/login";
     }
 
     @PostMapping("/accounts/login/")
-    public Object Login(@RequestBody @Validated LoginDto loginDto, BindingResult bindingResult){
+    public Object Login(@RequestBody @Validated LoginDto loginDto, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()){
+           //return "account/login";
             return bindingResult.getAllErrors();
         }
-        Member member = memberService.Login(loginDto);
-        System.out.println(member.toString());
-        return member;
+
+        memberService.Login(loginDto, bindingResult);
+        if(bindingResult.hasErrors()) {
+            return bindingResult.getAllErrors();
+           //return "account/login";
+        }
+        return "loginHome";
     }
 
     @GetMapping("/accounts/edit/")
-    public EditDto getProfileEdit(@RequestBody String id){
-        System.out.println(id);
-        return memberService.findEditInfo(id);
+    public String getProfileEdit(String id, Model model){
+
+        EditDto editInfo = memberService.findEditInfo(id);
+        model.addAttribute(editInfo);
+
+        return "member/profileInfoEdit";
     }
+
 
     @PostMapping("/accounts/edit/")
     public Object setProfileEdit (@RequestBody String memberId, @RequestBody @Validated EditDto editInfo, BindingResult bindingResult){
