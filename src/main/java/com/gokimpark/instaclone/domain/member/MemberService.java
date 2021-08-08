@@ -5,8 +5,11 @@ import com.gokimpark.instaclone.web.member.JoinDto;
 import com.gokimpark.instaclone.web.member.LoginDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class MemberService {
@@ -19,21 +22,42 @@ public class MemberService {
 
     ModelMapper mapper = new ModelMapper();
 
-    public Member signUp(JoinDto joinDto) {
+    public void signUp(JoinDto joinDto) {
         Member member = new Member(joinDto);
-        return memberRepository.save(member);
+        memberRepository.save(member);
     }
 
-    public Member findMemberById(String id){
+    public Member findById(String id){
         Optional<Member> member = memberRepository.findById(id);
         return member.orElse(null);
     }
 
-    public Member Login(LoginDto loginDto){
-        // email, id 한번에 받는 것 처리
-        return findMemberById(loginDto.getLoginId());
-        //return memberRepository.findByEmailOrUsernameOrPhoneNumber(email, userName, phoneNumber);
+    public void Login(LoginDto loginDto, BindingResult bindingResult){
+        Member member = findById(loginDto.getLoginId());
+
+        /*
+        if(isValidEmail(loginDto.getLoginId())) {
+            member = findById(loginDto.getLoginId());
+        }
+        else member = findByUsername(loginDto.getLoginId());
+         */
+
+        if(member == null) bindingResult.rejectValue("loginId", "mismatch");
+        else if (!member.isEqualPassword(loginDto.getPassword()))
+            bindingResult.rejectValue("password", "mismatch");
     }
+
+    public static boolean isValidEmail(String email) {
+        boolean err = false;
+        String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(email);
+        if(m.matches()) {
+            err = true;
+        }
+        return err;
+    }
+
     public Member findByEmail(String email) {
         return memberRepository.findById(email).get();
     }
@@ -43,12 +67,12 @@ public class MemberService {
     }
 
     public EditDto findEditInfo(String id) {
-        Member member = findMemberById(id);
+        Member member = findById(id);
         return mapper.map(member, EditDto.class);
     }
 
-    public EditDto modifyProfile(String memberPK, EditDto editInfo) {
-        Member member = memberRepository.findById(memberPK).get();
+    public EditDto modifyProfile(String memberId, EditDto editInfo) {
+        Member member = findById(memberId);
 
         member.setName(editInfo.getName());
         member.setId(editInfo.getEmail());
