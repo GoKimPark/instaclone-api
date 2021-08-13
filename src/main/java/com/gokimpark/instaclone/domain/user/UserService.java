@@ -1,15 +1,13 @@
 package com.gokimpark.instaclone.domain.user;
 
 import com.gokimpark.instaclone.domain.exception.UserException;
-import com.gokimpark.instaclone.web.member.EditDto;
-import com.gokimpark.instaclone.web.member.JoinDto;
-import com.gokimpark.instaclone.web.member.LoginDto;
+import com.gokimpark.instaclone.web.user.EditDto;
+import com.gokimpark.instaclone.web.user.JoinDto;
+import com.gokimpark.instaclone.web.user.LoginDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor

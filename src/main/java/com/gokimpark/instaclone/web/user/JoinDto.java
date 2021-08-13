@@ -1,4 +1,4 @@
-package com.gokimpark.instaclone.web.member;
+package com.gokimpark.instaclone.web.user;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 public class JoinDto {
 
     @NotBlank
-    private String joinId;
+    private String email;
 
     @NotBlank
     private String name;
