@@ -1,9 +1,9 @@
 package com.gokimpark.instaclone.domain.comment;
 
 import com.gokimpark.instaclone.domain.post.Post;
+import com.gokimpark.instaclone.domain.user.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,18 +11,22 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
-    @Id @GeneratedValue
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Lob
+    @Column(nullable = false)
+    private String text;
+
+    @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
 
-    private String userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Lob
-    private String comment;
-
-    @LastModifiedDate
     private LocalDateTime CreatedTime;
 }
