@@ -1,23 +1,22 @@
 package com.gokimpark.instaclone.domain.story;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.gokimpark.instaclone.domain.image.Image;
+import com.gokimpark.instaclone.domain.user.User;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.UUID;
-
 @Entity
-@Getter @Setter
+@NoArgsConstructor
 public class Story {
 
     @Id
-    @Column(unique = true)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private String url;
-    private String username;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Image imageUrl;
 
-    protected Story(){
-        id = UUID.randomUUID().toString();
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stories")
+    private User user;
 }
