@@ -1,4 +1,4 @@
-package com.gokimpark.instaclone.web.member;
+package com.gokimpark.instaclone.web.user;
 
 import lombok.Data;
 

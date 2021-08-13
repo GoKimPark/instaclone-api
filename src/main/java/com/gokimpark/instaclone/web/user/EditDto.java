@@ -1,6 +1,7 @@
-package com.gokimpark.instaclone.web.member;
+package com.gokimpark.instaclone.web.user;
 
 import lombok.Data;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -8,7 +9,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class EditDto {
 
-    private String profileImageUrl;
+    @ReadOnlyProperty
+    private Long userId;
 
     @NotBlank
     private String name;
