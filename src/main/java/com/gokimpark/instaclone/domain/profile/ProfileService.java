@@ -1,14 +1,10 @@
 package com.gokimpark.instaclone.domain.profile;
 
-import com.gokimpark.instaclone.domain.member.Member;
-import com.gokimpark.instaclone.domain.member.MemberService;
+import com.gokimpark.instaclone.domain.post.Post;
+import com.gokimpark.instaclone.domain.user.User;
 import com.gokimpark.instaclone.domain.post.PostService;
-import com.gokimpark.instaclone.domain.story.Story;
-import com.gokimpark.instaclone.domain.story.StoryService;
-import com.gokimpark.instaclone.web.profile.ProfileDto;
-import com.gokimpark.instaclone.web.profile.ProfileMemberInfoDto;
-import com.gokimpark.instaclone.web.profile.ProfilePostDto;
-import com.gokimpark.instaclone.web.profile.ProfileStoryDto;
+import com.gokimpark.instaclone.web.user.dto.ProfilePostDto;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
@@ -16,36 +12,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProfileService {
-    private MemberService memberService;
-    private PostService postService;
-    private StoryService storyService;
 
-    public ProfileService(MemberService memberService, PostService postService, StoryService storyService) {
-        this.memberService = memberService;
-        this.postService = postService;
-        this.storyService = storyService;
-    }
+    private final PostService postService;
 
     ModelMapper mapper = new ModelMapper();
 
-    public ProfileDto findProfile(String username) {
-        Member member = memberService.findByEmail(username);
-
-        ProfileDto profile = new ProfileDto();
-        profile.setMemberInfo(ProfileMemberInfoDto.from(member));
-
+    public List<ProfilePostDto> getProfilePosts(User user){
+        List<Post> posts = postService.findAllByUser(user);
         TypeToken<List<ProfilePostDto>> postsTypeToken = new TypeToken<>() {};
-        profile.setPosts(mapper.map(postService.findAllByUsername(member.getName()), postsTypeToken.getType()));
-
-        TypeToken<List<ProfileStoryDto>> storiesTypeToken = new TypeToken<>() {};
-        profile.setStories(mapper.map(storyService.findAllByUsername(member.getName()), storiesTypeToken.getType()));
-
-        return profile;
-    }
-
-    public Story findStoryByStoryId(String id) {
-        return storyService.findByStoryId(id);
+        return mapper.map(posts, postsTypeToken.getType());
     }
 }
 
