@@ -1,49 +1,56 @@
 package com.gokimpark.instaclone.domain.user;
 
 import com.gokimpark.instaclone.domain.exception.UserException;
-import com.gokimpark.instaclone.web.user.EditDto;
-import com.gokimpark.instaclone.web.user.JoinDto;
-import com.gokimpark.instaclone.web.user.LoginDto;
+import com.gokimpark.instaclone.domain.follow.FollowService;
+import com.gokimpark.instaclone.domain.post.PostService;
+import com.gokimpark.instaclone.domain.story.StoryService;
+import com.gokimpark.instaclone.web.user.dto.EditDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FollowService followService;
+    private final PostService postService;
+    private final StoryService storyService;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public User createAccount(User user) {
+        return userRepository.save(user);
     }
 
-    public User create(JoinDto joinDto) {
-        if(userRepository.findByEmail(joinDto.getEmail()) != null) throw new UserException("이미 존재하는 email 입니다.");
-        if(userRepository.findByUsername(joinDto.getUsername()) != null) throw new UserException("이미 존재하는 id 입니다.");
+    public User login(String loginId, String password){
 
-        return userRepository.save(User.builder()
-        .email(joinDto.getEmail())
-        .name(joinDto.getName())
-        .username(joinDto.getUsername())
-        .password(joinDto.getPassword())
-        .build());
+        User user = userRepository.findByEmailOrUsername(loginId, loginId).orElseThrow(() -> new UserException());
+        if(!user.isEqualPassword(password)) throw new UserException("잘못된 비밀번호 입니다.");
+        return user;
     }
 
     public User findById(Long userId){
-        Optional<User> member = userRepository.findById(userId);
-        return member.orElse(null);
+        return userRepository.findById(userId).orElseThrow(() -> new UserException());
     }
 
-    public User login(LoginDto loginDto){
-        String id = loginDto.getLoginId();
-        User findUser= userRepository.findByEmailOrUsername(id, id);
-        if(findUser != null) throw new UserException("잘못된 아이디 입니다.");
-        if(!findUser.isEqualPassword(loginDto.getPassword())) throw new UserException("잘못된 비밀번호 입니다.");
-        return findUser;
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username).orElseThrow(() -> new UserException());
     }
 
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserException());
+    }
+
+    public User existByUsername(String username){
+        return userRepository.findByUsername(username).orElse(null);
+    }
+
+    public User existByEmail(String email){
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+    @Transactional
     public User updateProfile(EditDto editDto) {
         User user = findById(editDto.getUserId());
 
@@ -51,6 +58,13 @@ public class UserService {
                 editDto.getWebSite(), editDto.getBio(),
                 editDto.getEmail(), editDto.getPhoneNumber()
         );
-        return user;
+        return findById(editDto.getUserId());
+    }
+
+    public void deleteAccount(String username){
+        User user = findByUsername(username);
+        followService.deleteFollowRelation(user);
+        postService.deleteAllByUser(user);
+        storyService.deleteAllByUser(user);
     }
 }

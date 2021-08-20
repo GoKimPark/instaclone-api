@@ -1,30 +1,43 @@
 package com.gokimpark.instaclone.domain.story;
 
+import com.gokimpark.instaclone.domain.user.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class StoryService {
 
-    private StoryRepository storyRepository;
+    private final StoryRepository storyRepository;
 
     @Transactional
-    public Story save(Story story, String username){
-        story.setUsername(username);
-        return storyRepository.save(story);
+    public User createStory(User user, String imageUrl){
+
+        Story saved = storyRepository.save(Story.builder()
+                .imageUrl(imageUrl)
+                .user(user)
+                .build());
+
+        return user;
     }
 
-    public List<Story> findAllByUsername(String username){
-        return storyRepository.findAllByUsername(username);
+    public List<Story> findAllByUsername(User user){
+        return storyRepository.findAllByUser(user);
     }
 
-    public Story findByStoryId(String id){
-        return storyRepository.findById(id).get();
+    public Optional<Story> findByStoryId(Long id){
+        return storyRepository.findById(id);
     }
 
-    public void delete(String postId) {
+    public void delete(Long postId) {
         storyRepository.deleteById(postId);
+    }
+
+    public void deleteAllByUser(User user) {
+        storyRepository.deleteAllByUser(user);
     }
 }

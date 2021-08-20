@@ -1,41 +1,54 @@
 package com.gokimpark.instaclone.domain.post;
 
-import com.gokimpark.instaclone.domain.member.Member;
-import com.gokimpark.instaclone.domain.member.MemberService;
-import lombok.AllArgsConstructor;
+import com.gokimpark.instaclone.domain.comment.CommentRepository;
+import com.gokimpark.instaclone.domain.like.LikesRepository;
+import com.gokimpark.instaclone.domain.user.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PostService {
-    private PostRepository postRepository;
-    private MemberService memberService;
 
-    public List<Post> findAllByUsername(String username){
-        return postRepository.findAllByUsername(username);
+    private final PostRepository postRepository;
+    private final LikesRepository likesRepository;
+    private final CommentRepository commentRepository;
+
+    public List<Post> findAllByUser(User user){
+        return postRepository.findAllByUser(user);
     }
 
-    public Post findByPostId(String postId){
-        return postRepository.getById(postId);
+    public String findCountPost(User user){
+        return String.valueOf(postRepository.countAllByUser(user));
     }
 
-    public void save(Post post, String username){
-        post.setUsername(username);
-        postRepository.save(post);
-
-        Member member = memberService.findByUsername(username);
-        member.postCountInc();
+    public Post findByPostId(Long postId){
+        return postRepository.findById(postId).get();
     }
 
-    public void delete(String postId){
+    public Post create(Post post){
+        return postRepository.save(post);
+    }
+
+    public Post update(Long postId, String caption, String location) {
+        Optional<Post> post = postRepository.findById(postId);
+        if(post == null) return null;
+
+        post.get().update(caption, location);
+        return post.get();
+    }
+
+    public void delete(Long postId){
         Post post = postRepository.findById(postId).get();
         postRepository.delete(post);
+        likesRepository.deleteAllByPost(post);
+        commentRepository.deleteAllByPost(post);
+    }
 
-        Member member = memberService.findByUsername(post.getUsername());
-        member.postCountDec();
+    public void deleteAllByUser(User user) {
+        postRepository.deleteAllByUser(user);
     }
 }

@@ -1,12 +1,13 @@
 package com.gokimpark.instaclone.domain.post;
-
+import com.gokimpark.instaclone.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public interface PostRepository extends JpaRepository<Post, String> {
+public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findAllByUsername(String username);
+    List<Post> findAllByUser(User user);
+    void deleteAllByUser(User user);
+
+    Long countAllByUser(User user);
 }
