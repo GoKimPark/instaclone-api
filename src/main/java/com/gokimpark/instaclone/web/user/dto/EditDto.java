@@ -1,4 +1,4 @@
-package com.gokimpark.instaclone.web.user;
+package com.gokimpark.instaclone.web.user.dto;
 
 import lombok.Data;
 import org.springframework.data.annotation.ReadOnlyProperty;
@@ -26,5 +26,4 @@ public class EditDto {
 
     @NotBlank
     private String phoneNumber;
-    private String gender;
 }
