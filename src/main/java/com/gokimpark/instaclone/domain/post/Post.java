@@ -1,34 +1,30 @@
 package com.gokimpark.instaclone.domain.post;
 
 import com.gokimpark.instaclone.domain.comment.Comment;
-import com.gokimpark.instaclone.domain.image.Image;
-import com.gokimpark.instaclone.domain.like.Like;
+import com.gokimpark.instaclone.domain.like.Likes;
 import com.gokimpark.instaclone.domain.user.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
-    private List<Image> images;
+    private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "posts")
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
-    private List<Like> likes;
+    private List<Likes> likes;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> comments;
@@ -37,9 +33,9 @@ public class Post {
     private String location;
 
     @Builder
-    public Post(User user, List<Image> images, String caption, String location){
+    public Post(User user, String imageUrl, String caption, String location){
         this.user = user;
-        this.images = images;
+        this.imageUrl = imageUrl;
         this.caption = caption;
         this.location = location;
     }
