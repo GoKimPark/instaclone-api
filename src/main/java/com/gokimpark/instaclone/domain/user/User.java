@@ -5,6 +5,7 @@ import com.gokimpark.instaclone.domain.story.Story;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import javax.validation.constraints.Email;
 import java.util.List;
 
@@ -26,7 +27,6 @@ public class User {
     @Column(unique = true)
     private String username; // userId
 
-    @Column(unique = true)
     private String password;
 
     private String profileImageUrl;
@@ -45,14 +45,13 @@ public class User {
 
     @Builder
     public User(String email, String name, String username, String password) {
-
         this.email = email;
-
         this.name = name;
         this.username = username;
         this.password = password;
     }
 
+    @Transactional
     public void update(String name, String username, String website, String bio, String email, String phoneNumber){
         this.name = name;
         this.username = username;
