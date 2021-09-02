@@ -24,6 +24,6 @@ public class EditDto {
     @NotBlank @Email
     private String email;
 
-    @NotBlank
+    //@NotBlank
     private String phoneNumber;
 }
