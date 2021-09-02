@@ -36,11 +36,11 @@ public class ProfileController {
         ProfileUserInfoDto userInfoDto = mapper.map(user, ProfileUserInfoDto.class);
 
         List<ProfilePostDto> profilePosts = profileService.getProfilePosts(user);
-        userInfoDto.setPostCnt(String.valueOf(profilePosts.stream().count()));
+        userInfoDto.setPostCount(String.valueOf(profilePosts.stream().count()));
 
         Pair<String, String> followCount = followService.getProfileFollowCount(user.getId());
-        userInfoDto.setFollowerCnt(followCount.getFirst());
-        userInfoDto.setFollowingCnt(followCount.getSecond());
+        userInfoDto.setFollowerCount(followCount.getFirst());
+        userInfoDto.setFollowingCount(followCount.getSecond());
 
         ProfileDto profileDto = new ProfileDto();
         profileDto.setUserInfo(userInfoDto);
@@ -63,6 +63,7 @@ public class ProfileController {
             return new ResponseEntity<>(editDto, HttpStatus.BAD_REQUEST);
         }
         User user = userService.updateProfile(editDto);
-        return new ResponseEntity<>(editDto, HttpStatus.OK);
+        EditDto edited = mapper.map(user, EditDto.class);
+        return new ResponseEntity<>(edited, HttpStatus.OK);
     }
 }
