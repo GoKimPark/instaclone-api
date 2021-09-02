@@ -1,6 +1,5 @@
 package com.gokimpark.instaclone.web.user.dto;
 
-import com.gokimpark.instaclone.domain.like.Likes;
 import com.gokimpark.instaclone.domain.user.User;
 import lombok.Data;
 
