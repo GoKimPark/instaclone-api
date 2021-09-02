@@ -3,6 +3,7 @@ package com.gokimpark.instaclone.domain.follow;
 import com.gokimpark.instaclone.domain.exception.UserException;
 import com.gokimpark.instaclone.domain.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,6 +49,12 @@ public class FollowService {
     public String getFollowerCount(Long user){
         Long count = followRepository.countByToUser(user);
         return chgToStr(count);
+    }
+
+    public Pair<String, String> getProfileFollowCount(Long userId){
+        String followerCount = getFollowerCount(userId);
+        String followingCount = getFollowingCount(userId);
+        return Pair.of(followerCount, followingCount);
     }
 
     public void deleteFollowRelation(Long userId){

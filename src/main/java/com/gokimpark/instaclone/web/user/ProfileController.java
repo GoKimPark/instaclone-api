@@ -10,6 +10,7 @@ import com.gokimpark.instaclone.web.user.dto.ProfilePostDto;
 import com.gokimpark.instaclone.web.user.dto.ProfileUserInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -37,8 +38,9 @@ public class ProfileController {
         List<ProfilePostDto> profilePosts = profileService.getProfilePosts(user);
         userInfoDto.setPostCnt(String.valueOf(profilePosts.stream().count()));
 
-        userInfoDto.setFollowerCnt(followService.getFollowerCount(user.getId()));
-        userInfoDto.setFollowingCnt(followService.getFollowingCount(user.getId()));
+        Pair<String, String> followCount = followService.getProfileFollowCount(user.getId());
+        userInfoDto.setFollowerCnt(followCount.getFirst());
+        userInfoDto.setFollowingCnt(followCount.getSecond());
 
         ProfileDto profileDto = new ProfileDto();
         profileDto.setUserInfo(userInfoDto);
