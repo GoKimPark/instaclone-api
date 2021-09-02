@@ -1,7 +1,6 @@
 package com.gokimpark.instaclone.domain.user;
 
 import com.gokimpark.instaclone.domain.post.Post;
-import com.gokimpark.instaclone.domain.story.Story;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,9 +38,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Story> stories;
 
     @Builder
     public User(String email, String name, String username, String password) {

@@ -3,7 +3,6 @@ package com.gokimpark.instaclone.domain.user;
 import com.gokimpark.instaclone.domain.exception.UserException;
 import com.gokimpark.instaclone.domain.follow.FollowService;
 import com.gokimpark.instaclone.domain.post.PostService;
-import com.gokimpark.instaclone.domain.story.StoryService;
 import com.gokimpark.instaclone.web.user.dto.EditDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final FollowService followService;
     private final PostService postService;
-    private final StoryService storyService;
 
     public User createAccount(User user) {
         return userRepository.save(user);
@@ -65,6 +63,5 @@ public class UserService {
         User user = findByUsername(username);
         followService.deleteFollowRelation(user);
         postService.deleteAllByUser(user);
-        storyService.deleteAllByUser(user);
     }
 }
