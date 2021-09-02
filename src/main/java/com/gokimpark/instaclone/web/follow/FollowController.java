@@ -31,14 +31,14 @@ public class FollowController {
     public ResponseEntity<?> unFollow(@PathVariable String toUsername, @PathVariable String fromUsername){
         User toUser = userService.findByUsername(toUsername);
         User fromUser = userService.findByUsername(fromUsername);
-        followService.unFollow(toUser, fromUser);
+        followService.unFollow(toUser.getId(), fromUser.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/follower/{username}")
     public ResponseEntity<?> getFollower(@PathVariable String username){
         User user = userService.findByUsername(username);
-        List<User> followerList = followService.getFollowerList(user);
+        List<User> followerList = followService.getFollowerList(user.getId());
 
         List<ProfileListDto> followerDtoList = followerList.stream()
                 .map(u -> new ProfileListDto(u))
@@ -49,7 +49,7 @@ public class FollowController {
     @GetMapping("/following/{username}")
     public ResponseEntity<?> getFollowing(@PathVariable String username){
         User user = userService.findByUsername(username);
-        List<User> followingList = followService.getFollowingList(user);
+        List<User> followingList = followService.getFollowingList(user.getId());
 
         List<ProfileListDto> followingDtoList = followingList.stream()
                 .map(u -> new ProfileListDto(u))

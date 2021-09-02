@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,39 +18,41 @@ public class FollowService {
 
         try{
             followRepository.save(Follow.builder()
-                    .toUser(toUser)
-                    .fromUser(fromUser)
+                    .toUser(toUser.getId())
+                    .fromUser(fromUser.getId())
                     .build());
         } catch (Exception e){
             throw new UserException("이미 팔로우함.");
         }
     }
 
-    public void unFollow(User toUser, User fromUser){
-        followRepository.unFollow(toUser, fromUser);
+    public void unFollow(Long toUserId, Long fromUserId){
+
+        Optional<Follow> follow = followRepository.findByToUserAndFromUser(toUserId, fromUserId);
+        if(!follow.isEmpty()) followRepository.delete(follow.get());
     }
 
-    public List<User> getFollowingList(User user){
-        return followRepository.findAllByFromUser(user);
+    public List<User> getFollowingList(Long userId){
+        return followRepository.findAllByFromUser(userId);
     }
 
-    public String getFollowingCount(User user){
+    public String getFollowingCount(Long user){
         Long count = followRepository.countByFromUser(user);
         return chgToStr(count);
     }
 
-    public List<User> getFollowerList(User user){
-        return followRepository.findAllByToUser(user);
+    public List<User> getFollowerList(Long userId){
+        return followRepository.findAllByToUser(userId);
     }
 
-    public String getFollowerCount(User user){
+    public String getFollowerCount(Long user){
         Long count = followRepository.countByToUser(user);
         return chgToStr(count);
     }
 
-    public void deleteFollowRelation(User user){
-        followRepository.deleteAllByFromUser(user);
-        followRepository.deleteAllByToUser(user);
+    public void deleteFollowRelation(Long userId){
+        followRepository.deleteAllByFromUser(userId);
+        followRepository.deleteAllByToUser(userId);
     }
 
     public String chgToStr(Long count){

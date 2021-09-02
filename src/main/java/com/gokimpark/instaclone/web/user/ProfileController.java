@@ -35,10 +35,10 @@ public class ProfileController {
         ProfileUserInfoDto userInfoDto = mapper.map(user, ProfileUserInfoDto.class);
 
         List<ProfilePostDto> profilePosts = profileService.getProfilePosts(user);
-        userInfoDto.setPostCnt(String.valueOf(profilePosts.size()));
+        userInfoDto.setPostCnt(String.valueOf(profilePosts.stream().count()));
 
-        userInfoDto.setFollowerCnt(followService.getFollowerCount(user));
-        userInfoDto.setFollowingCnt(followService.getFollowingCount(user));
+        userInfoDto.setFollowerCnt(followService.getFollowerCount(user.getId()));
+        userInfoDto.setFollowingCnt(followService.getFollowingCount(user.getId()));
 
         ProfileDto profileDto = new ProfileDto();
         profileDto.setUserInfo(userInfoDto);

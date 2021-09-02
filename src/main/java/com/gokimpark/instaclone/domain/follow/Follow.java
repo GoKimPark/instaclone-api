@@ -1,35 +1,37 @@
 package com.gokimpark.instaclone.domain.follow;
 
-import com.gokimpark.instaclone.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @NoArgsConstructor
 @Entity
 @Getter
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"to_user", "from_user"})
-)
+//@Table(
+//        uniqueConstraints = @UniqueConstraint(columnNames = {"to_user", "from_user"})
+//)
+@IdClass(Follow.PK.class)
 public class Follow {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "to_user", insertable = false, updatable = false)
+    private Long toUser;
 
-    @ManyToOne
-    @JoinColumn(name = "to_user")
-    private User toUser;
-
-    @ManyToOne
-    @JoinColumn(name = "from_user")
-    private User fromUser;
+    @Id
+    @Column(name = "from_user", insertable = false, updatable = false)
+    private Long fromUser;
 
     @Builder
-    public Follow(User toUser, User fromUser){
+    public Follow(Long toUser, Long fromUser) {
         this.toUser = toUser;
         this.fromUser = fromUser;
+    }
+
+    public static class PK implements Serializable {
+        Long toUser;
+        Long fromUser;
     }
 }
