@@ -18,20 +18,20 @@ public class Follow {
 
     @Id
     @Column(name = "to_user", insertable = false, updatable = false)
-    private Long toUser;
+    private Integer toUser;
 
     @Id
     @Column(name = "from_user", insertable = false, updatable = false)
-    private Long fromUser;
+    private Integer fromUser;
 
     @Builder
-    public Follow(Long toUser, Long fromUser) {
+    public Follow(Integer toUser, Integer fromUser) {
         this.toUser = toUser;
         this.fromUser = fromUser;
     }
 
     public static class PK implements Serializable {
-        Long toUser;
-        Long fromUser;
+        Integer toUser;
+        Integer fromUser;
     }
 }

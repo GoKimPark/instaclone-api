@@ -1,6 +1,5 @@
 package com.gokimpark.instaclone.domain.like;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gokimpark.instaclone.domain.post.Post;
 import com.gokimpark.instaclone.domain.user.User;
 import lombok.AccessLevel;
@@ -13,14 +12,14 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "user_id"})
-)
+//@Table(
+//        uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "user_id"})
+//)
 public class Likes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
