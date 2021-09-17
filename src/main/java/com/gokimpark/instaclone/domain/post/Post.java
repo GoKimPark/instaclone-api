@@ -4,9 +4,10 @@ import com.gokimpark.instaclone.domain.comment.Comment;
 import com.gokimpark.instaclone.domain.like.Likes;
 import com.gokimpark.instaclone.domain.user.User;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -18,6 +19,10 @@ public class Post {
     private Integer id;
 
     private String imageUrl;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createDate;
+    private String caption;
+    private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -28,9 +33,6 @@ public class Post {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> comments;
-
-    private String caption;
-    private String location;
 
     @Builder
     public Post(User user, String imageUrl, String caption, String location){

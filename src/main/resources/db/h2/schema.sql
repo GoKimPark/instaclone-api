@@ -17,11 +17,12 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Post (
-    id       INTEGER IDENTITY PRIMARY KEY,
-    imageURL varchar(30),
-    user     INTEGER NOT NULL,
-    caption  varchar(30),
-    location varchar(30)
+    id         INTEGER IDENTITY PRIMARY KEY,
+    imageURL   varchar(30),
+    createDate DATE,
+    caption    varchar(30),
+    location   varchar(30),
+    user       INTEGER NOT NULL
 );
 ALTER TABLE Post ADD CONSTRAINT fk_post_user FOREIGN KEY (user_id) REFERENCES Users (id);
 
