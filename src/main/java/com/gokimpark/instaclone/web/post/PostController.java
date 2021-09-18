@@ -51,7 +51,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<?> getPost(@PathVariable Long postId){
+    public ResponseEntity<?> getPost(@PathVariable Integer postId){
         Post post = postService.findByPostId(postId);
 
         PostShowDto postShowDto = PostShowDto.builder()
@@ -64,7 +64,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable Long postId){
+    public ResponseEntity<?> deletePost(@PathVariable Integer postId){
         postService.delete(postId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

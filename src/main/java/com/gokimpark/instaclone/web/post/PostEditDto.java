@@ -7,7 +7,7 @@ import org.springframework.data.annotation.ReadOnlyProperty;
 public class PostEditDto {
 
     @ReadOnlyProperty
-    private Long PostId;
+    private Integer PostId;
     private String caption;
     private String location;
 }

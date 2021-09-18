@@ -27,37 +27,37 @@ public class FollowService {
         }
     }
 
-    public void unFollow(Long toUserId, Long fromUserId){
+    public void unFollow(Integer toUserId, Integer fromUserId){
 
         Optional<Follow> follow = followRepository.findByToUserAndFromUser(toUserId, fromUserId);
         if(!follow.isEmpty()) followRepository.delete(follow.get());
     }
 
-    public List<User> getFollowingList(Long userId){
+    public List<User> getFollowingList(Integer userId){
         return followRepository.findAllByFromUser(userId);
     }
 
-    public String getFollowingCount(Long user){
+    public String getFollowingCount(Integer user){
         Long count = followRepository.countByFromUser(user);
         return chgToStr(count);
     }
 
-    public List<User> getFollowerList(Long userId){
+    public List<User> getFollowerList(Integer userId){
         return followRepository.findAllByToUser(userId);
     }
 
-    public String getFollowerCount(Long user){
+    public String getFollowerCount(Integer user){
         Long count = followRepository.countByToUser(user);
         return chgToStr(count);
     }
 
-    public Pair<String, String> getProfileFollowCount(Long userId){
+    public Pair<String, String> getProfileFollowCount(Integer userId){
         String followerCount = getFollowerCount(userId);
         String followingCount = getFollowingCount(userId);
         return Pair.of(followerCount, followingCount);
     }
 
-    public void deleteFollowRelation(Long userId){
+    public void deleteFollowRelation(Integer userId){
         followRepository.deleteAllByFromUser(userId);
         followRepository.deleteAllByToUser(userId);
     }

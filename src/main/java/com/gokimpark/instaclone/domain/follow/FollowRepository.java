@@ -7,15 +7,15 @@ import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Follow.PK> {
 
-    Optional<Follow> findByToUserAndFromUser(Long toUserId, Long fromUserId);
+    Optional<Follow> findByToUserAndFromUser(Integer toUserId, Integer fromUserId);
 
-    Long countByToUser(Long userId);
-    Long countByFromUser(Long userId);
+    Long countByToUser(Integer userId);
+    Long countByFromUser(Integer userId);
 
-    List<User> findAllByFromUser(Long userId);
-    List<User> findAllByToUser(Long userId);
+    List<User> findAllByFromUser(Integer userId);
+    List<User> findAllByToUser(Integer userId);
 
-    void deleteAllByFromUser(Long userId);
-    void deleteAllByToUser(Long userId);
+    void deleteAllByFromUser(Integer userId);
+    void deleteAllByToUser(Integer userId);
 
 }

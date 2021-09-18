@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,5 +29,5 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private LocalDateTime CreatedTime;
+    private LocalDate createdTime;
 }

@@ -21,7 +21,7 @@ public class LikesController {
     private final PostService postService;
 
     @PostMapping("/{postId}/{username}")
-    public ResponseEntity<?> addLikes(@PathVariable Long postId, @PathVariable String username){
+    public ResponseEntity<?> addLikes(@PathVariable Integer postId, @PathVariable String username){
         User user = userService.findByUsername(username);
         Post post = postService.findByPostId(postId);
 
@@ -30,7 +30,7 @@ public class LikesController {
     }
 
     @DeleteMapping("/{postId}/{username}")
-    public ResponseEntity<?> deleteLikes(@PathVariable Long postId, @PathVariable String username){
+    public ResponseEntity<?> deleteLikes(@PathVariable Integer postId, @PathVariable String username){
         User user = userService.findByUsername(username);
         Post post = postService.findByPostId(postId);
         likesService.unLike(post, user);

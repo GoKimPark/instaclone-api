@@ -25,7 +25,7 @@ public class PostService {
         return String.valueOf(postRepository.countAllByUser(user));
     }
 
-    public Post findByPostId(Long postId){
+    public Post findByPostId(Integer postId){
         return postRepository.findById(postId).get();
     }
 
@@ -33,7 +33,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post update(Long postId, String caption, String location) {
+    public Post update(Integer postId, String caption, String location) {
         Optional<Post> post = postRepository.findById(postId);
         if(post == null) return null;
 
@@ -41,7 +41,7 @@ public class PostService {
         return post.get();
     }
 
-    public void delete(Long postId){
+    public void delete(Integer postId){
         Post post = postRepository.findById(postId).get();
         postRepository.delete(post);
         likesRepository.deleteAllByPost(post);

@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,8 +20,8 @@ public class Post {
     private Integer id;
 
     private String imageUrl;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate createDate;
+   // @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createdTime;
     private String caption;
     private String location;
 

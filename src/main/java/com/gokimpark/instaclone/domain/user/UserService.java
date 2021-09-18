@@ -28,7 +28,7 @@ public class UserService {
         return user;
     }
 
-    public User findById(Long userId){
+    public User findById(Integer userId){
         return userRepository.findById(userId).orElseThrow(() -> new UserException());
     }
 

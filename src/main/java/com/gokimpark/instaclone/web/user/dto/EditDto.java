@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 public class EditDto {
 
     @ReadOnlyProperty
-    private Long userId;
+    private Integer userId;
 
     @NotBlank
     private String name;
