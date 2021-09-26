@@ -12,6 +12,6 @@ public class HomeController {
 
     @GetMapping("/home")
     public void home() {
-        System.out.println("hello world\n");
+        log.info("hello world!");
     }
 }
