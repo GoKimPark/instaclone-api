@@ -10,9 +10,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Getter
-//@Table(
-//        uniqueConstraints = @UniqueConstraint(columnNames = {"to_user", "from_user"})
-//)
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"to_user", "from_user"})
+)
 @IdClass(Follow.PK.class)
 public class Follow {
 
