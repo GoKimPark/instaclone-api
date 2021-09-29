@@ -27,10 +27,11 @@ public class User {
     @Column(unique = true)
     private String username; // userId
 
+    @Column(nullable = false)
     private String password;
-
     private String profileImageUrl;
     private String website;
+
     @Lob
     private String bio;
 
