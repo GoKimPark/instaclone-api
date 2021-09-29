@@ -1,8 +1,7 @@
 package com.gokimpark.instaclone.web.user;
 
-import com.gokimpark.instaclone.domain.exception.UserException;
-import com.gokimpark.instaclone.domain.user.User;
 import com.gokimpark.instaclone.domain.user.UserService;
+import com.gokimpark.instaclone.domain.user.dto.UserDto;
 import com.gokimpark.instaclone.web.user.dto.JoinDto;
 import com.gokimpark.instaclone.web.user.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
@@ -28,19 +27,11 @@ public class AccountController {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(joinDto, HttpStatus.BAD_REQUEST);
         }
-        if(userService.existByEmail(joinDto.getEmail()) != null) return new ResponseEntity<>(joinDto, HttpStatus.BAD_REQUEST);
-        if(userService.existByUsername(joinDto.getUsername()) != null)  return new ResponseEntity<>(joinDto, HttpStatus.BAD_REQUEST);
+        if(!userService.existByEmail(joinDto.getEmail())) return new ResponseEntity<>(joinDto, HttpStatus.BAD_REQUEST);
+        if(!userService.existByUsername(joinDto.getUsername()))  return new ResponseEntity<>(joinDto, HttpStatus.BAD_REQUEST);
 
-
-        User createdAccount = userService.createAccount(User.builder()
-                .email(joinDto.getEmail())
-                .name(joinDto.getName())
-                .username(joinDto.getUsername())
-                .password(joinDto.getPassword())
-                .build());
-
-        User user = userService.createAccount(createdAccount);
-        return new ResponseEntity<>(user.getId(), HttpStatus.OK);
+        UserDto user = userService.createAccount(joinDto);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -49,8 +40,8 @@ public class AccountController {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(loginDto, HttpStatus.BAD_REQUEST);
         }
-        User user = userService.login(loginDto.getLoginId(), loginDto.getPassword());
-        return new ResponseEntity<>(user.getId(), HttpStatus.OK);
+        UserDto user = userService.login(loginDto.getLoginId(), loginDto.getPassword());
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @DeleteMapping("/{username}")
