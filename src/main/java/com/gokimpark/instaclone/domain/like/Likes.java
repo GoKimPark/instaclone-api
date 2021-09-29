@@ -12,9 +12,6 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@Table(
-//        uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "user_id"})
-//)
 public class Likes {
 
     @Id
