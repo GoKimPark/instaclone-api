@@ -11,6 +11,7 @@ public class PostProfileDto {
     private Integer id;
     private String imageUrl;
 
+    public PostProfileDto(){}
     public PostProfileDto(Post post) {
         this.id = post.getId();
         this.imageUrl = post.getImageUrl();

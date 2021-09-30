@@ -15,6 +15,7 @@ public class PostDetailDto {
 
     private Long likesCount;
 
+    public PostDetailDto(){}
     public PostDetailDto(Post post, Long likesCount) {
         this.id = post.getId();
         this.imageUrl = post.getImageUrl();
