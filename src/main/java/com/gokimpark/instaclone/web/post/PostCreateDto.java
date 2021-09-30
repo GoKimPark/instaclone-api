@@ -1,10 +1,10 @@
 package com.gokimpark.instaclone.web.post;
 
-import lombok.Getter;
+import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
+@Data
 public class PostCreateDto {
 
     @NotBlank
