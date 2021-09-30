@@ -38,30 +38,23 @@ public class UserServiceTest {
         assertEquals(savedUser.getId(), userRepository.findByUsername("id123").get().getId());
     }
 
-    @Test(expected = UserException.class)
+    @Test
+    @Transactional
     public void login() throws Exception {
-        User user1 = new User();
-        user1.setEmail("abc@gmail.com");
-        user1.setName("kim");
-        user1.setUsername("id123");
-        user1.setPassword("pass1234");
 
-        User user2 = new User();
-        user2.setEmail("efg@gmail.com");
-        user2.setName("lee");
-        user2.setUsername("id456");
-        user2.setPassword("pass5678");
+        JoinDto joinDto1 = new JoinDto();
+        joinDto1.setEmail("abc@gmail.com");
+        joinDto1.setName("kim");
+        joinDto1.setUsername("id123");
+        joinDto1.setPassword("pass1234");
 
-        userRepository.save(user1);
-        userRepository.save(user2);
+        UserDto user1 = userService.createAccount(joinDto1);
 
-        Optional<User> findUser = userRepository.findByUsername("id456");
-        UserDto login = userService.login("id456", "pass56778");
+        User findUser = userRepository.findByUsername("id123").orElseThrow(Exception::new);
+        UserDto login = userService.login("id123", "pass1234");
 
-        if(findUser.isPresent()){
-            assertEquals(findUser.get().getUsername(), login.getUsername());
-            assertEquals(findUser.get().getPassword(), login.getPassword());
-        }
+        assertEquals(findUser.getUsername(), login.getUsername());
+        assertEquals(findUser.getPassword(), login.getPassword());
     }
 
     @Test
