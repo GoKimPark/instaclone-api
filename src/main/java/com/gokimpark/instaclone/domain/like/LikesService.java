@@ -8,6 +8,7 @@ import com.gokimpark.instaclone.domain.user.User;
 import com.gokimpark.instaclone.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class LikesService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
+    @Transactional
     public void addLike(Integer postId, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
         Post post = postRepository.findById(postId).orElseThrow(PostException::new);
@@ -26,6 +28,7 @@ public class LikesService {
         likesRepository.save(newLike);
     }
 
+    @Transactional
     public void unLike(Integer postId, String username){
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
         Post post = postRepository.findById(postId).orElseThrow(PostException::new);
