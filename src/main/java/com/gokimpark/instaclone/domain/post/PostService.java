@@ -11,7 +11,6 @@ import com.gokimpark.instaclone.domain.user.User;
 import com.gokimpark.instaclone.domain.user.UserRepository;
 import com.gokimpark.instaclone.web.post.PostCreateDto;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +26,28 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
-    ModelMapper mapper = new ModelMapper();
+    @Transactional
+    public PostDetailDto create(PostCreateDto postCreateDto){
+        User user = userRepository.findByUsername(postCreateDto.getUsername()).orElseThrow(UserException::new);
+
+        Post post = Post.builder()
+                .imageUrl(postCreateDto.getImageUrl())
+                .caption(postCreateDto.getCaption())
+                .location(postCreateDto.getLocation())
+                .user(user)
+                .build();
+
+        Post savedPost = postRepository.save(post);
+        return new PostDetailDto(savedPost, 0L);
+    }
+
+    @Transactional
+    public PostDetailDto update(Integer postId, String caption, String location) {
+        Post post = postRepository.findById(postId).orElseThrow(PostException::new);
+
+        post.update(caption, location);
+        return findByPostId(postId);
+    }
 
     public List<PostProfileDto> findAllProfilePostByUser(String username){
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
@@ -47,27 +67,6 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(PostException::new);
         List<Likes> likes = likesRepository.findAllByPost(post);
         return new PostDetailDto(post, (long) likes.size());
-    }
-
-    public PostProfileDto create(PostCreateDto postCreateDto){
-        User user = userRepository.findByUsername(postCreateDto.getUsername()).orElseThrow(UserException::new);
-
-        Post post = Post.builder()
-                .imageUrl(postCreateDto.getImageUrl())
-                .caption(postCreateDto.getCaption())
-                .location(postCreateDto.getLocation())
-                .user(user)
-                .build();
-
-        return mapper.map(postRepository.save(post), PostProfileDto.class);
-    }
-
-    @Transactional
-    public PostProfileDto update(Integer postId, String caption, String location) {
-        Post post = postRepository.findById(postId).orElseThrow(PostException::new);
-
-        post.update(caption, location);
-        return mapper.map(postRepository.findById(postId).get(), PostProfileDto.class);
     }
 
     public void delete(Integer postId){

@@ -24,13 +24,13 @@ public class PostController {
         if(bindingResult.hasErrors()){
             return new ResponseEntity<>(postCreateDto, HttpStatus.BAD_REQUEST);
         }
-        PostProfileDto savedPost = postService.create(postCreateDto);
+        PostDetailDto savedPost = postService.create(postCreateDto);
         return new ResponseEntity<>(savedPost, HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<?> updatePost(@RequestBody PostEditDto postEditDto) {
-        PostProfileDto post = postService.update(postEditDto.getPostId(), postEditDto.getCaption(), postEditDto.getLocation());
+        PostDetailDto post = postService.update(postEditDto.getPostId(), postEditDto.getCaption(), postEditDto.getLocation());
         if(post == null){
             return new ResponseEntity<>(postEditDto, HttpStatus.BAD_REQUEST);
         }
