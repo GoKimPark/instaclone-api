@@ -9,8 +9,8 @@ import com.gokimpark.instaclone.web.user.dto.JoinDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -22,6 +22,7 @@ public class UserService {
     private final PostService postService;
     ModelMapper mapper = new ModelMapper();
 
+    @Transactional
     public UserDto createAccount(JoinDto joinDto) {
 
         User user = User.builder()
@@ -43,20 +44,17 @@ public class UserService {
     }
 
     public UserDto findById(Integer userId){
-        Optional<User> user = userRepository.findById(userId);
-        if(user.isEmpty()) throw new UserException();
+        User user = userRepository.findById(userId).orElseThrow(UserException::new);
         return mapper.map(user, UserDto.class);
     }
 
     public UserDto findByUsername(String username){
-        Optional<User> user = userRepository.findByUsername(username);
-        if(user.isEmpty()) throw new UserException();
+        User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
         return mapper.map(user, UserDto.class);
     }
 
     public UserDto findByEmail(String email){
-        Optional<User> user = userRepository.findByEmail(email);
-        if(user.isEmpty()) throw new UserException();
+        User user = userRepository.findByEmail(email).orElseThrow(UserException::new);
         return mapper.map(user, UserDto.class);
     }
 
@@ -72,25 +70,23 @@ public class UserService {
 
     @Transactional
     public UserDto updateProfile(EditDto editDto) {
-        Optional<User> user = userRepository.findById(editDto.getUserId());
-        if(user.isEmpty()) throw new UserException();
+        User user = userRepository.findById(editDto.getUserId()).orElseThrow(UserException::new);
 
-        user.get().update(editDto.getName(), editDto.getUsername(),
-                editDto.getWebSite(), editDto.getBio(),
-                editDto.getEmail(), editDto.getPhoneNumber()
-        );
+        user.setName(editDto.getName());
+        user.setUsername(editDto.getUsername());
+        user.setWebsite(editDto.getWebSite());
+        user.setBio(editDto.getBio());
+        user.setEmail(editDto.getEmail());
+        user.setPhoneNumber(editDto.getPhoneNumber());
 
-        Optional<User> editedUser = userRepository.findById(editDto.getUserId());
-        if(editedUser.isEmpty()) throw new UserException();
+        User editedUser = userRepository.findById(editDto.getUserId()).orElseThrow(UserException::new);
         return mapper.map(editedUser, UserDto.class);
     }
 
     public void deleteAccount(String username){
-        Optional<User> user = userRepository.findByUsername(username);
-        if(user.isPresent()){
-            followService.deleteFollowRelation(user.get().getId());
-            followService.deleteFollowRelation(user.get().getId());
-            postService.deleteAllByUser(user.get());
-        }
+        User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
+        followService.deleteFollowRelation(user.getId());
+        followService.deleteFollowRelation(user.getId());
+        postService.deleteAllByUser(user);
     }
 }

@@ -49,16 +49,6 @@ public class User {
         this.password = password;
     }
 
-    @Transactional
-    public void update(String name, String username, String website, String bio, String email, String phoneNumber){
-        this.name = name;
-        this.username = username;
-        this.website = website;
-        this.bio = bio;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-    }
-
     public void updateProfileImageUrl(String profileImageUrl){
         this.profileImageUrl = profileImageUrl;
     }
