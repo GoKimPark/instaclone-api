@@ -1,18 +1,14 @@
 package com.gokimpark.instaclone.domain.user;
 
-import com.gokimpark.instaclone.domain.exception.UserException;
 import com.gokimpark.instaclone.domain.user.dto.UserDto;
 import com.gokimpark.instaclone.web.user.dto.EditDto;
 import com.gokimpark.instaclone.web.user.dto.JoinDto;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,13 +38,13 @@ public class UserServiceTest {
     @Transactional
     public void login() throws Exception {
 
-        JoinDto joinDto1 = new JoinDto();
-        joinDto1.setEmail("abc@gmail.com");
-        joinDto1.setName("kim");
-        joinDto1.setUsername("id123");
-        joinDto1.setPassword("pass1234");
+        JoinDto joinDto = new JoinDto();
+        joinDto.setEmail("abc@gmail.com");
+        joinDto.setName("kim");
+        joinDto.setUsername("id123");
+        joinDto.setPassword("pass1234");
 
-        UserDto user1 = userService.createAccount(joinDto1);
+        UserDto user = userService.createAccount(joinDto);
 
         User findUser = userRepository.findByUsername("id123").orElseThrow(Exception::new);
         UserDto login = userService.login("id123", "pass1234");
@@ -60,15 +56,16 @@ public class UserServiceTest {
     @Test
     @Transactional
     public void update() throws Exception {
-        User user = new User();
-        user.setEmail("abc@gmail.com");
-        user.setName("kim");
-        user.setUsername("id123");
-        user.setPassword("pass1234");
+        JoinDto joinDto = new JoinDto();
+        joinDto.setEmail("abc@gmail.com");
+        joinDto.setName("kim");
+        joinDto.setUsername("id123");
+        joinDto.setPassword("pass1234");
 
-        User savedUser = userRepository.save(user);
+        UserDto account = userService.createAccount(joinDto);
+
         EditDto editDto = new EditDto();
-        editDto.setUserId(savedUser.getId());
+        editDto.setUserId(account.getId());
         editDto.setName("Lee");
         editDto.setUsername("id789");
         editDto.setEmail("abc@naver.com");
