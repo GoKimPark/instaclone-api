@@ -21,31 +21,26 @@ public class FollowService {
 
     public void addFollow(String toUsername, String fromUsername){
 
-        Optional<User> toUser = userRepository.findByUsername(toUsername);
-        Optional<User> fromUser = userRepository.findByUsername(fromUsername);
-
-        if(toUser.isEmpty() || fromUser.isEmpty()) throw new UserException();
+        User toUser = userRepository.findByUsername(toUsername).orElseThrow(UserException::new);
+        User fromUser = userRepository.findByUsername(fromUsername).orElseThrow(UserException::new);
 
         try{
             followRepository.save(Follow.builder()
-                    .toUser(toUser.get().getId())
-                    .fromUser(fromUser.get().getId())
+                    .toUser(toUser.getId())
+                    .fromUser(fromUser.getId())
                     .build());
         } catch (Exception e){
             throw new UserException("이미 팔로우함.");
         }
     }
 
-    public void unFollow(String toUsername, String fromUsername){
+    public void unFollow(String toUsername, String fromUsername) {
 
-        Optional<User> toUser = userRepository.findByUsername(toUsername);
-        Optional<User> fromUser = userRepository.findByUsername(fromUsername);
+        User toUser = userRepository.findByUsername(toUsername).orElseThrow(UserException::new);
+        User fromUser = userRepository.findByUsername(fromUsername).orElseThrow(UserException::new);
 
-        if(toUser.isEmpty()) throw new UserException();
-        if(fromUser.isEmpty()) throw new UserException();
-
-        Optional<Follow> follow = followRepository.findByToUserAndFromUser(toUser.get().getId(), fromUser.get().getId());
-        follow.ifPresent(followRepository::delete);
+        Follow follow = followRepository.findByToUserAndFromUser(toUser.getId(), fromUser.getId()).orElseThrow(UserException::new);
+        followRepository.delete(follow);
     }
 
     public List<FollowSimpleListDto> getFollowingList(String username){
