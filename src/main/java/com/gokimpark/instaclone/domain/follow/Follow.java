@@ -24,7 +24,6 @@ public class Follow {
     @Column(name = "from_user", insertable = false, updatable = false)
     private Integer fromUser;
 
-    @Builder
     public Follow(Integer toUser, Integer fromUser) {
         this.toUser = toUser;
         this.fromUser = fromUser;
