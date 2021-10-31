@@ -21,14 +21,14 @@ public class AccountController {
 
     private final UserService userService;
 
-    @PostMapping("/emailsignup")
+    @PostMapping("/create")
     public ResponseEntity<?> createAccount(@RequestBody @Validated JoinDto joinDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(joinDto, HttpStatus.BAD_REQUEST);
         }
-        if(!userService.existByEmail(joinDto.getEmail())) return new ResponseEntity<>(joinDto, HttpStatus.BAD_REQUEST);
-        if(!userService.existByUsername(joinDto.getUsername()))  return new ResponseEntity<>(joinDto, HttpStatus.BAD_REQUEST);
+        if(userService.existByEmail(joinDto.getEmail())) return new ResponseEntity<>(joinDto, HttpStatus.BAD_REQUEST);
+        if(userService.existByUsername(joinDto.getUsername()))  return new ResponseEntity<>(joinDto, HttpStatus.BAD_REQUEST);
 
         UserDto user = userService.createAccount(joinDto);
         return new ResponseEntity<>(user, HttpStatus.OK);
