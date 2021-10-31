@@ -2,9 +2,6 @@ package com.gokimpark.instaclone.web.follow;
 
 import com.gokimpark.instaclone.domain.follow.FollowService;
 import com.gokimpark.instaclone.domain.follow.dto.FollowSimpleListDto;
-import com.gokimpark.instaclone.domain.user.User;
-import com.gokimpark.instaclone.domain.user.UserService;
-import com.gokimpark.instaclone.web.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +17,16 @@ public class FollowController {
 
     @PostMapping("/follow/{toUsername}/{fromUsername}")
     public ResponseEntity<?> addFollow(@PathVariable String toUsername, @PathVariable String fromUsername){
-        followService.addFollow(toUsername, fromUsername);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Boolean result = followService.addFollow(toUsername, fromUsername);
+        if(result) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @PostMapping("/unfollow/{toUsername}/{fromUsername}")
     public ResponseEntity<?> unFollow(@PathVariable String toUsername, @PathVariable String fromUsername){
-        followService.unFollow(toUsername, fromUsername);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Boolean result = followService.unFollow(toUsername, fromUsername);
+        if(result) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @GetMapping("/follower/{username}")
@@ -41,17 +40,4 @@ public class FollowController {
         List<FollowSimpleListDto> followingList = followService.getFollowingList(username);
         return new ResponseEntity<>(followingList, HttpStatus.OK);
     }
-
-    private EditDto toEditDto(User user){
-        EditDto editDto = new EditDto();
-        editDto.setUserId(user.getId());
-        editDto.setName(user.getName());
-        editDto.setUsername(user.getUsername());
-        editDto.setWebSite(user.getWebsite());
-        editDto.setBio(user.getBio());
-        editDto.setEmail(user.getEmail());
-        editDto.setPhoneNumber(user.getPhoneNumber());
-        return editDto;
-    }
-
 }

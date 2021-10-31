@@ -19,35 +19,33 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
 
-    public void addFollow(String toUsername, String fromUsername){
+    public Boolean addFollow(String toUsername, String fromUsername){
 
         User toUser = userRepository.findByUsername(toUsername).orElseThrow(UserException::new);
         User fromUser = userRepository.findByUsername(fromUsername).orElseThrow(UserException::new);
 
-        try{
-            followRepository.save(Follow.builder()
-                    .toUser(toUser.getId())
-                    .fromUser(fromUser.getId())
-                    .build());
-        } catch (Exception e){
-            throw new UserException("이미 팔로우함.");
-        }
+        Optional<Follow> relation = followRepository.findByToUserAndFromUser(toUser.getId(), fromUser.getId());
+        if(relation.isPresent()) return false;
+        followRepository.save(new Follow(toUser.getId(),  fromUser.getId()));
+        return true;
     }
 
-    public void unFollow(String toUsername, String fromUsername) {
+    public Boolean unFollow(String toUsername, String fromUsername) {
 
         User toUser = userRepository.findByUsername(toUsername).orElseThrow(UserException::new);
         User fromUser = userRepository.findByUsername(fromUsername).orElseThrow(UserException::new);
 
-        Follow follow = followRepository.findByToUserAndFromUser(toUser.getId(), fromUser.getId()).orElseThrow(UserException::new);
-        followRepository.delete(follow);
+        Optional<Follow> relation = followRepository.findByToUserAndFromUser(toUser.getId(), fromUser.getId());
+        if(relation.isEmpty()) return false;
+        followRepository.delete(relation.get());
+        return true;
     }
 
     public List<FollowSimpleListDto> getFollowingList(String username){
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
         List<User> followingList = followRepository.findAllByFromUser(user.getId());
         return followingList.stream()
-                .map(User -> new FollowSimpleListDto(User))
+                .map(FollowSimpleListDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -55,7 +53,7 @@ public class FollowService {
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
         List<User> followerList = followRepository.findAllByToUser(user.getId());
         return followerList.stream()
-                .map(User -> new FollowSimpleListDto(User))
+                .map(FollowSimpleListDto::new)
                 .collect(Collectors.toList());
     }
 
