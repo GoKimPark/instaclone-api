@@ -63,3 +63,50 @@
 #### updateProfile
 
 - 수정하려고 하는 정보를 ```EditDto``` 로 넘겨받고 처리한다.
+<br>
+
+## follow
+
+- follower : 나의 인스타그램을 구독하는 사람
+- following : 내가 구독하고 있는 target
+
+### 이전 로직
+
+```User entity``` 에 ```follower list```, ```following list``` 필드를 갖도록 구현했다.
+
+```java
+public class User {
+    
+    private List<Integer> followerList;
+    private List<Integer> followingList;
+}
+```
+
+```user A``` 가 ```user B``` 를 unfollow 했다면 **2가지**를 처리해야한다.
+
+- ```user A``` 의 ```following list``` 필드에서 ```user B``` 를 삭제
+- ```user B``` 의 ```follower list``` 필드에서 ```user A``` 를 삭제
+
+```user A``` 가 요청한 처리에 대해 ```user A``` 의 정보에만 접근하는 것이 아니고 ```user B``` 의 정보에서 접근해야 한다. 즉, 이는 위험하다고 판단해 해당 로직을 사용하지 않기도 함.
+
+### 현재 로직
+
+- from_user : 나
+- to_user : 내가 구독하려는 target;
+
+```Follow entity``` 에서 ```from_user``` 와 ```to_user``` 의 ```ID field``` 만 갖는다.
+
+```java
+public class Follow {
+
+    @Id
+    @Column(name = "to_user")
+    private Integer toUser;
+
+    @Id
+    @Column(name = "from_user")
+    private Integer fromUser;
+}
+```
+
+```user A``` 가 ```user B``` 를 unfollow 했다면 **1번만 처리**하면 된다.
