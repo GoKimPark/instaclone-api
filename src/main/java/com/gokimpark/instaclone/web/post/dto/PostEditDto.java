@@ -1,4 +1,4 @@
-package com.gokimpark.instaclone.web.post;
+package com.gokimpark.instaclone.web.post.dto;
 
 import lombok.Getter;
 import org.springframework.data.annotation.ReadOnlyProperty;

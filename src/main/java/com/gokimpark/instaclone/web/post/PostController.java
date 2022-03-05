@@ -2,7 +2,8 @@ package com.gokimpark.instaclone.web.post;
 
 import com.gokimpark.instaclone.domain.post.PostService;
 import com.gokimpark.instaclone.domain.post.dto.PostDetailDto;
-import com.gokimpark.instaclone.domain.post.dto.PostProfileDto;
+import com.gokimpark.instaclone.web.post.dto.PostCreateDto;
+import com.gokimpark.instaclone.web.post.dto.PostEditDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;

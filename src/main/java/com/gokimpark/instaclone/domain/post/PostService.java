@@ -9,7 +9,7 @@ import com.gokimpark.instaclone.domain.post.dto.PostDetailDto;
 import com.gokimpark.instaclone.domain.post.dto.PostProfileDto;
 import com.gokimpark.instaclone.domain.user.User;
 import com.gokimpark.instaclone.domain.user.UserRepository;
-import com.gokimpark.instaclone.web.post.PostCreateDto;
+import com.gokimpark.instaclone.web.post.dto.PostCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

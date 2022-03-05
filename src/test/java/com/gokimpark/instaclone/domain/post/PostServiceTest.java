@@ -1,10 +1,9 @@
 package com.gokimpark.instaclone.domain.post;
 
 import com.gokimpark.instaclone.domain.post.dto.PostDetailDto;
-import com.gokimpark.instaclone.domain.post.dto.PostProfileDto;
 import com.gokimpark.instaclone.domain.user.UserService;
 import com.gokimpark.instaclone.domain.user.dto.UserDto;
-import com.gokimpark.instaclone.web.post.PostCreateDto;
+import com.gokimpark.instaclone.web.post.dto.PostCreateDto;
 import com.gokimpark.instaclone.web.user.dto.JoinDto;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -27,7 +26,7 @@ public class PostServiceTest {
 
     @Test
     @Transactional
-    public void create() throws Exception {
+    public void create() {
 
         JoinDto joinDto = new JoinDto();
         joinDto.setEmail("abc@gmail.com");
@@ -48,7 +47,7 @@ public class PostServiceTest {
 
     @Test
     @Transactional
-    public void update() throws Exception {
+    public void update() {
 
         JoinDto joinDto = new JoinDto();
         joinDto.setEmail("abc@gmail.com");

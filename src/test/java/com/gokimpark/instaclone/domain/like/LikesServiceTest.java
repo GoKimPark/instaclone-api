@@ -4,7 +4,7 @@ import com.gokimpark.instaclone.domain.post.PostService;
 import com.gokimpark.instaclone.domain.post.dto.PostDetailDto;
 import com.gokimpark.instaclone.domain.user.UserService;
 import com.gokimpark.instaclone.domain.user.dto.UserDto;
-import com.gokimpark.instaclone.web.post.PostCreateDto;
+import com.gokimpark.instaclone.web.post.dto.PostCreateDto;
 import com.gokimpark.instaclone.web.user.dto.JoinDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ public class LikesServiceTest {
 
     @Test
     @Transactional
-    public void checkLike() throws Exception {
+    public void checkLike() {
 
         JoinDto joinDto = new JoinDto();
         joinDto.setEmail("abc@gmail.com");
