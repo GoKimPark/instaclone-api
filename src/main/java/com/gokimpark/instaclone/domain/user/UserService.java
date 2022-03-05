@@ -86,7 +86,6 @@ public class UserService {
     public void deleteAccount(String username){
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
         followService.deleteFollowRelation(user.getId());
-        followService.deleteFollowRelation(user.getId());
         postService.deleteAllByUser(user);
     }
 }
