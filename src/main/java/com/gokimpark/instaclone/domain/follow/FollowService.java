@@ -1,17 +1,20 @@
 package com.gokimpark.instaclone.domain.follow;
 
+import com.gokimpark.instaclone.domain.exception.FollowException;
 import com.gokimpark.instaclone.domain.exception.UserException;
 import com.gokimpark.instaclone.domain.follow.dto.FollowSimpleListDto;
 import com.gokimpark.instaclone.domain.user.User;
 import com.gokimpark.instaclone.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FollowService {
@@ -20,41 +23,61 @@ public class FollowService {
     private final UserRepository userRepository;
 
     public Boolean addFollow(String toUsername, String fromUsername){
+        checkSameUser(toUsername, fromUsername);
 
         User toUser = userRepository.findByUsername(toUsername).orElseThrow(UserException::new);
         User fromUser = userRepository.findByUsername(fromUsername).orElseThrow(UserException::new);
 
-        Optional<Follow> relation = followRepository.findByToUserAndFromUser(toUser.getId(), fromUser.getId());
-        if(relation.isPresent()) return false;
+        Optional<Follow> relation = getFollowRelation(toUser.getId(), fromUser.getId());
+        if(relation.isPresent())
+            throw new FollowException("이미 follow 한 관계입니다.");
         followRepository.save(new Follow(toUser.getId(),  fromUser.getId()));
         return true;
     }
 
     public Boolean unFollow(String toUsername, String fromUsername) {
+        checkSameUser(toUsername, fromUsername);
 
         User toUser = userRepository.findByUsername(toUsername).orElseThrow(UserException::new);
         User fromUser = userRepository.findByUsername(fromUsername).orElseThrow(UserException::new);
 
-        Optional<Follow> relation = followRepository.findByToUserAndFromUser(toUser.getId(), fromUser.getId());
-        if(relation.isEmpty()) return false;
+        Optional<Follow> relation = getFollowRelation(toUser.getId(), fromUser.getId());
+        if(relation.isEmpty())
+            throw new FollowException("follow 관계가 아닙니다.");
         followRepository.delete(relation.get());
         return true;
     }
 
+    private Optional<Follow> getFollowRelation(Long toUserId, Long fromUserId) {
+        return followRepository.findByToUserAndFromUser(toUserId, fromUserId);
+    }
+
+    private void checkSameUser(String toUsername, String fromUsername) {
+        if(toUsername.equals(fromUsername)) throw new FollowException("follower 와 following 의 대상이 동일합니다.");
+    }
+
     public List<FollowSimpleListDto> getFollowingList(String username){
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
-        List<User> followingList = followRepository.findAllByFromUser(user.getId());
-        return followingList.stream()
-                .map(FollowSimpleListDto::new)
-                .collect(Collectors.toList());
+        List<Follow> followingList = followRepository.findAllByFromUser(user.getId());
+
+        List<FollowSimpleListDto> followSimpleListDtoList = new ArrayList<>();
+        for(Follow follow : followingList) {
+            User target = userRepository.findById(follow.getToUser()).orElseThrow(UserException::new);
+            followSimpleListDtoList.add(new FollowSimpleListDto(target.getUsername()));
+        }
+        return followSimpleListDtoList;
     }
 
     public List<FollowSimpleListDto> getFollowerList(String username){
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
-        List<User> followerList = followRepository.findAllByToUser(user.getId());
-        return followerList.stream()
-                .map(FollowSimpleListDto::new)
-                .collect(Collectors.toList());
+        List<Follow> followerList = followRepository.findAllByToUser(user.getId());
+
+        List<FollowSimpleListDto> followSimpleListDtoList = new ArrayList<>();
+        for(Follow follow : followerList) {
+            User target = userRepository.findById(follow.getFromUser()).orElseThrow(UserException::new);
+            followSimpleListDtoList.add(new FollowSimpleListDto(target.getUsername()));
+        }
+        return followSimpleListDtoList;
     }
 
     public Long getFollowingCount(String username){
@@ -71,7 +94,7 @@ public class FollowService {
         return Pair.of(getFollowerCount(username), getFollowingCount(username));
     }
 
-    public void deleteFollowRelation(Integer userId){
+    public void deleteFollowRelation(Long userId){
         followRepository.deleteAllByFromUser(userId);
         followRepository.deleteAllByToUser(userId);
     }
