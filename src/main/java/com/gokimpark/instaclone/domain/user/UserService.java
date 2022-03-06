@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 @Service
@@ -43,7 +42,7 @@ public class UserService {
         return mapper.map(user, UserDto.class);
     }
 
-    public UserDto findById(Integer userId){
+    public UserDto findById(Long userId){
         User user = userRepository.findById(userId).orElseThrow(UserException::new);
         return mapper.map(user, UserDto.class);
     }

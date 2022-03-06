@@ -1,21 +1,20 @@
 package com.gokimpark.instaclone.domain.follow;
 
-import com.gokimpark.instaclone.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Follow.PK> {
 
-    Optional<Follow> findByToUserAndFromUser(Integer toUserId, Integer fromUserId);
+    Optional<Follow> findByToUserAndFromUser(Long toUserId, Long fromUserId);
 
-    Long countByToUser(Integer userId);
-    Long countByFromUser(Integer userId);
+    Long countByToUser(Long userId);
+    Long countByFromUser(Long userId);
 
-    List<User> findAllByFromUser(Integer userId);
-    List<User> findAllByToUser(Integer userId);
+    List<Follow> findAllByFromUser(Long userId);
+    List<Follow> findAllByToUser(Long userId);
 
-    void deleteAllByFromUser(Integer userId);
-    void deleteAllByToUser(Integer userId);
+    void deleteAllByFromUser(Long userId);
+    void deleteAllByToUser(Long userId);
 
 }

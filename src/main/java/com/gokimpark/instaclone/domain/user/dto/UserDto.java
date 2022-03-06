@@ -11,7 +11,7 @@ import javax.validation.constraints.Email;
 public class UserDto {
 
     @ReadOnlyProperty
-    private Integer id;
+    private Long id;
 
     @Email @Column(nullable = false)
     private String email;

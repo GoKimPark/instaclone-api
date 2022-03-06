@@ -2,10 +2,8 @@ package com.gokimpark.instaclone.domain.user;
 
 import com.gokimpark.instaclone.domain.post.Post;
 import lombok.*;
-
 import javax.persistence.*;
-import javax.transaction.Transactional;
-import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -17,17 +15,20 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Email
-    @Column(nullable = false)
+    //@Email
+    @NotBlank
     private String email;
+
+    @NotBlank
     private String name;
 
+    @NotBlank
     @Column(unique = true)
     private String username; // userId
 
-    @Column(nullable = false)
+    @NotBlank
     private String password;
     private String profileImageUrl;
     private String website;

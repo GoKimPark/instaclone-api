@@ -1,6 +1,5 @@
 package com.gokimpark.instaclone.domain.follow;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,19 +17,19 @@ public class Follow {
 
     @Id
     @Column(name = "to_user", insertable = false, updatable = false)
-    private Integer toUser;
+    private Long toUser;
 
     @Id
     @Column(name = "from_user", insertable = false, updatable = false)
-    private Integer fromUser;
+    private Long fromUser;
 
-    public Follow(Integer toUser, Integer fromUser) {
+    public Follow(Long toUser, Long fromUser) {
         this.toUser = toUser;
         this.fromUser = fromUser;
     }
 
     public static class PK implements Serializable {
-        Integer toUser;
-        Integer fromUser;
+        Long toUser;
+        Long fromUser;
     }
 }
