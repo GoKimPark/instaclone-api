@@ -7,7 +7,6 @@
 - [Account](#Account)
 - [Profile](#Profile)
 - [Relation](#Relation)
-<br>
 
 ## Account
 
@@ -79,7 +78,7 @@
 - follower : 나의 인스타그램을 구독하는 사람
 - following : 내가 구독하고 있는 target
 
-### 이전 로직
+### Failed Attempt 1
 
 ```User entity``` 에 ```follower list```, ```following list``` 필드를 갖도록 구현했다.
 
@@ -98,7 +97,7 @@ public class User {
 
 ```user A``` 가 요청한 처리에 대해 ```user A``` 의 정보에만 접근하는 것이 아니고 ```user B``` 의 정보에서 접근해야 한다. 즉, 이는 위험하다고 판단해 해당 로직을 사용하지 않기도 함.
 
-### 현재 로직
+### Failed Attempt 2
 
 - from_user : 나
 - to_user : 내가 구독하려는 target;
@@ -118,4 +117,7 @@ public class Follow {
 }
 ```
 
-```user A``` 가 ```user B``` 를 unfollow 했다면 **1번만 처리**하면 된다.
+```user A``` 가 ```user B``` 를 unfollow 했다면 ```user B``` 데이터에 접근할 필요없이 ```user B(toUser) - user A(fromUser)``` 관계만 제거하면 된다.<br>
+
+하지만 **follower, following list** 를 가져오는 로직에서 N + 1 문제가 발생한다. Follow entity 는 User 의 id 를 참조하는 것이 아니라 **User 의 id 값을 별도로 가지고 있다**. 즉, Follow entity 와 User entity 는 서로 연결되어 있지 않다.<br>
+그래서 UserRepository 에서 User id 값과 일치하는 User 를 찾아야 하기 때문에 N + 1 문제가 발생한다.
