@@ -1,6 +1,15 @@
 # instagram clone coding
 
-## Account 기능
+![png](/_image/diagram.png)
+
+## 기능
+
+- [Account](#Account)
+- [Profile](#Profile)
+- [Relation](#Relation)
+<br>
+
+## Account
 
 계정을 생성 및 삭제하고 로그인을 처리한다.
 
@@ -39,7 +48,7 @@
 - 해당 계정의 ```post(게시물)``` 을 모두 삭제한다.
 <br>
 
-## Profile 기능
+## Profile
 
 사용자의 프로필 화면을 출력하고, 프로필 내용을 수정한다.
 
@@ -65,7 +74,7 @@
 - 수정하려고 하는 정보를 ```EditDto``` 로 넘겨받고 처리한다.
 <br>
 
-## follow
+## Relation
 
 - follower : 나의 인스타그램을 구독하는 사람
 - following : 내가 구독하고 있는 target
