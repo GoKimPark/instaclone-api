@@ -1,38 +1,35 @@
 Table users as U {
-  id Integer [pk, increment] // auto-increment
+  id Long [pk, increment]
   email String
   name String
   username String
   password String
-  profileImageUrl String
   website String
-  bio String
-  phoneNumber String
 }
 
 Table Post as P {
-  id Integer [pk, increment]
+  id Long [pk, increment]
   imageUrl String
   createdTime LocalDate
-  caption String
-  location String
-  user User [ref: > U.id]
+  comments Comment
+  user Long [ref: > U.id]
 }
 
 Table Comment as C {
-  id Integer [pk, increment]
+  id Long [pk, increment]
   text String
-  post Post [ref: > P.id]
-  user User [ref: > U.id]
+  post Long [ref: > P.id]
+  user Long [ref: > U.id]
+  createdTime LocalDate
 }
 
 Table Follow as F {
-  toUser Integer [pk]
-  fromUser Integer [pk]
+  toUser Long [pk, ref: > U.id]
+  fromUser Long [pk, ref: > U.id]
 }
 
 Table Likes as L {
-  id Integer [pk, increment]
-  post Post [ref: > P.id]
-  user User [ref: > U.id]
+  id Long [pk, increment]
+  post Long [ref: > P.id]
+  user Long [ref: > U.id]
 }
