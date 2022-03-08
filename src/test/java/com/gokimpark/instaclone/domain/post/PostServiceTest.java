@@ -27,16 +27,10 @@ public class PostServiceTest {
     @Test
     @Transactional
     public void create() {
-
-        JoinDto joinDto = new JoinDto();
-        joinDto.setEmail("abc@gmail.com");
-        joinDto.setName("kim");
-        joinDto.setUsername("id123");
-        joinDto.setPassword("pass1234");
-        UserDto account = userService.createAccount(joinDto);
+        UserDto user = createUser();
 
         PostCreateDto postCreateDto = new PostCreateDto();
-        postCreateDto.setUsername(account.getUsername());
+        postCreateDto.setUsername(user.getUsername());
         postCreateDto.setImageUrl("imageUrl-123");
         postCreateDto.setCaption("caption");
         postCreateDto.setLocation("seoul");
@@ -48,26 +42,29 @@ public class PostServiceTest {
     @Test
     @Transactional
     public void update() {
-
-        JoinDto joinDto = new JoinDto();
-        joinDto.setEmail("abc@gmail.com");
-        joinDto.setName("kim");
-        joinDto.setUsername("id123");
-        joinDto.setPassword("pass1234");
-        UserDto account = userService.createAccount(joinDto);
+        UserDto user = createUser();
 
         PostCreateDto postCreateDto = new PostCreateDto();
-        postCreateDto.setUsername(account.getUsername());
-        postCreateDto.setImageUrl("imageUrl-123");
+        postCreateDto.setUsername(user.getUsername());
+        postCreateDto.setImageUrl("imageUrl-1234");
         postCreateDto.setCaption("caption");
         postCreateDto.setLocation("seoul");
 
         PostDetailDto createdPost = postService.create(postCreateDto);
         PostDetailDto updatePost = postService.update(createdPost.getId(), "caption123", "pusan");
+        assertEquals("pusan", updatePost.getLocation());
 
         PostDetailDto findPost = postService.findByPostId(createdPost.getId());
         assertEquals(updatePost.getId(), findPost.getId());
-        assertEquals("pusan", updatePost.getLocation());
         assertEquals("pusan", findPost.getLocation());
+    }
+
+    private UserDto createUser() {
+        JoinDto joinDto = new JoinDto();
+        joinDto.setEmail("abc@gmail.com");
+        joinDto.setName("kim");
+        joinDto.setUsername("id123");
+        joinDto.setPassword("pass1234");
+        return userService.createAccount(joinDto);
     }
 }

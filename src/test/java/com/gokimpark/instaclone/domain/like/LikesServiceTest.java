@@ -28,30 +28,39 @@ public class LikesServiceTest {
     @Test
     @Transactional
     public void checkLike() {
+        PostDetailDto post = createPost();
+        assertEquals(0L, likesService.countByPost(post.getId()));
 
+        UserDto user = createUser();
+        likesService.addLike(post.getId(), user.getUsername());
+        assertEquals(1L, likesService.countByPost(post.getId()));
+
+        likesService.unLike(post.getId(), user.getUsername());
+        assertEquals(0L, likesService.countByPost(post.getId()));
+    }
+
+    private UserDto createUser() {
         JoinDto joinDto = new JoinDto();
         joinDto.setEmail("abc@gmail.com");
         joinDto.setName("kim");
         joinDto.setUsername("id123");
         joinDto.setPassword("pass1234");
-        UserDto userAccount = userService.createAccount(joinDto);
+        return userService.createAccount(joinDto);
+    }
+
+    private PostDetailDto createPost() {
+        JoinDto joinDto = new JoinDto();
+        joinDto.setEmail("kiwi456@gmail.com");
+        joinDto.setName("lee");
+        joinDto.setUsername("id456");
+        joinDto.setPassword("pass456");
+        UserDto user = userService.createAccount(joinDto);
 
         PostCreateDto postCreateDto = new PostCreateDto();
-        postCreateDto.setUsername(userAccount.getUsername());
+        postCreateDto.setUsername(user.getUsername());
         postCreateDto.setImageUrl("imageUrl-123");
         postCreateDto.setCaption("caption");
         postCreateDto.setLocation("seoul");
-        PostDetailDto createdPost = postService.create(postCreateDto);
-        
-        Long count = likesService.countByPost(createdPost.getId());
-        assertEquals(0L, count);
-
-        likesService.addLike(createdPost.getId(), userAccount.getUsername());
-        Long count2 = likesService.countByPost(createdPost.getId());
-        assertEquals(1L, count2);
-
-        likesService.unLike(createdPost.getId(), userAccount.getUsername());
-        Long count3 = likesService.countByPost(createdPost.getId());
-        assertEquals(0L, count3);
+        return postService.create(postCreateDto);
     }
 }
