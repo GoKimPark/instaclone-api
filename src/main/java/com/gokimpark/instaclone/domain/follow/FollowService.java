@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,26 +57,12 @@ public class FollowService {
 
     public List<FollowSimpleListDto> getFollowingList(String username){
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
-        List<Follow> followingList = followRepository.findAllByFromUser(user.getId());
-
-        List<FollowSimpleListDto> followSimpleListDtoList = new ArrayList<>();
-        for(Follow follow : followingList) {
-            User target = userRepository.findById(follow.getToUser()).orElseThrow(UserException::new);
-            followSimpleListDtoList.add(new FollowSimpleListDto(target.getUsername()));
-        }
-        return followSimpleListDtoList;
+        return followRepository.findAllByFromUser(user.getId());
     }
 
     public List<FollowSimpleListDto> getFollowerList(String username){
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
-        List<Follow> followerList = followRepository.findAllByToUser(user.getId());
-
-        List<FollowSimpleListDto> followSimpleListDtoList = new ArrayList<>();
-        for(Follow follow : followerList) {
-            User target = userRepository.findById(follow.getFromUser()).orElseThrow(UserException::new);
-            followSimpleListDtoList.add(new FollowSimpleListDto(target.getUsername()));
-        }
-        return followSimpleListDtoList;
+        return followRepository.findAllByToUser(user.getId());
     }
 
     public Long getFollowingCount(String username){
