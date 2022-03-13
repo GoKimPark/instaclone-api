@@ -83,4 +83,8 @@ public class FollowService {
         followRepository.deleteAllByFromUser(userId);
         followRepository.deleteAllByToUser(userId);
     }
+
+    public boolean isFollow(Long toUserId, Long fromUserId) {
+        return followRepository.findByToUserAndFromUser(toUserId, fromUserId).isPresent();
+    }
 }

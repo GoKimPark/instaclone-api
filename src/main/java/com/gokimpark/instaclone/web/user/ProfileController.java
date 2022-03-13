@@ -7,6 +7,7 @@ import com.gokimpark.instaclone.domain.user.UserService;
 import com.gokimpark.instaclone.domain.user.dto.UserDto;
 import com.gokimpark.instaclone.web.user.dto.EditDto;
 import com.gokimpark.instaclone.web.user.dto.ProfileDto;
+import com.gokimpark.instaclone.web.user.dto.ProfileRequestDto;
 import com.gokimpark.instaclone.web.user.dto.ProfileUserInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,15 +30,25 @@ public class ProfileController {
 
     ModelMapper mapper = new ModelMapper();
 
-    @GetMapping("/{username}")
-    public ResponseEntity<?> getProfile(@PathVariable String username) {
+    @GetMapping
+    public ResponseEntity<?> getProfile(@RequestBody @Validated ProfileRequestDto profileRequestDto, BindingResult bindingResult) {
 
-        UserDto user = userService.findByUsername(username);
-        ProfileUserInfoDto userInfoDto = mapper.map(user, ProfileUserInfoDto.class);
+        if(bindingResult.hasErrors()){
+            return new ResponseEntity<>(profileRequestDto, HttpStatus.BAD_REQUEST);
+        }
 
-        List<PostProfileDto> postProfileDtoList = postService.findAllProfilePostByUser(username);
+        UserDto requestedUser = userService.findByUsername(profileRequestDto.getRequestedUsername());
+        UserDto targetUser = userService.findByUsername(profileRequestDto.getTargetUsername());
 
-        Pair<Long, Long> followCount = followService.getProfileFollowCount(username);
+        ProfileUserInfoDto userInfoDto = mapper.map(targetUser, ProfileUserInfoDto.class);
+        if(requestedUser.getId().equals(targetUser.getId()))
+            userInfoDto.setFollow(true);
+        else
+            userInfoDto.setFollow(followService.isFollow(targetUser.getId(), requestedUser.getId()));
+
+        List<PostProfileDto> postProfileDtoList = postService.findAllProfilePostByUser(targetUser.getUsername());
+
+        Pair<Long, Long> followCount = followService.getProfileFollowCount(targetUser.getUsername());
         userInfoDto.setFollowerCount(followCount.getFirst());
         userInfoDto.setFollowingCount(followCount.getSecond());
 
@@ -65,6 +76,4 @@ public class ProfileController {
         EditDto edited = mapper.map(user, EditDto.class);
         return new ResponseEntity<>(edited, HttpStatus.OK);
     }
-
-
 }
