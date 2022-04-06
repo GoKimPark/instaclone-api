@@ -12,12 +12,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/account")
-public class AccountController {
+@RequestMapping("/REST/account")
+public class AccountRestController {
 
     private final UserService userService;
 
