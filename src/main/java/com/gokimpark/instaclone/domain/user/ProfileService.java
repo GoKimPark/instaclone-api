@@ -23,25 +23,27 @@ public class ProfileService {
 
     ModelMapper mapper = new ModelMapper();
 
-    public ProfileDto getProfile(String targetUsername, String requestedUsername) {
-        UserDto targetUser = userService.findByUsername(targetUsername);
-        UserDto requestedUser = userService.findByUsername(requestedUsername);
-
-        ProfileUserInfoDto userInfoDto = mapper.map(targetUser, ProfileUserInfoDto.class);
-        if(requestedUser.getId().equals(targetUser.getId()))
-            userInfoDto.setFollow(true);
-        else
-            userInfoDto.setFollow(followService.isFollow(targetUser.getId(), requestedUser.getId()));
-
-        List<PostProfileDto> postProfileDtoList = postService.findAllProfilePostByUser(targetUser.getUsername());
-
-        Pair<Long, Long> followCount = followService.getProfileFollowCount(targetUser.getUsername());
-        userInfoDto.setFollowerCount(followCount.getFirst());
-        userInfoDto.setFollowingCount(followCount.getSecond());
+    public ProfileDto getProfile(String toUsername, String fromUsername) {
+        UserDto toUser = userService.findByUsername(toUsername);
+        UserDto fromUser = userService.findByUsername(fromUsername);
 
         ProfileDto profileDto = new ProfileDto();
-        profileDto.setUserInfo(userInfoDto);
+        ProfileUserInfoDto userInfoDto = mapper.map(toUser, ProfileUserInfoDto.class);
+        if(fromUser.getId().equals(toUser.getId())) {
+            profileDto.setIsOneself(true);
+        }
+        else {
+            profileDto.setIsOneself(false);
+            userInfoDto.setFollow(followService.isFollow(toUser.getId(), fromUser.getId()));
+        }
+        List<PostProfileDto> postProfileDtoList = postService.findAllProfilePostByUser(toUser.getUsername());
+        userInfoDto.setPostCount((long) postProfileDtoList.size());
         profileDto.setPosts(postProfileDtoList);
+
+        Pair<Long, Long> followCount = followService.getProfileFollowCount(toUser.getUsername());
+        userInfoDto.setFollowerCount(followCount.getFirst());
+        userInfoDto.setFollowingCount(followCount.getSecond());
+        profileDto.setUserInfo(userInfoDto);
         return profileDto;
     }
 }

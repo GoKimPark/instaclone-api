@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ProfileDto {
 
+    Boolean isOneself;
     ProfileUserInfoDto userInfo;
     List<PostProfileDto> posts;
     List<ProfileStoryDto> stories;
