@@ -2,7 +2,9 @@
 
 ![png](/_image/diagram.png)
 
-## FOLLOW 관계 처리 방식
+## issue 
+
+### FOLLOW 관계 처리 방식
 
 - follower : 나의 인스타그램을 구독하는 사람
 - following : 내가 구독하고 있는 target
@@ -10,6 +12,8 @@
 FOLLOW 관계를 효율적으로 관리하는 방법을 계속해서 변경하는 중이며 아래 링크에 FOLLOW 관계에 대해 시도했던 과정을 작성했다.
 
 > https://velog.io/@evelyn82ny/instagram-follow
+
+<br>
 
 ## 기능
 
