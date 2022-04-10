@@ -1,10 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
 </head>
 <body>
-
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+    <div class="jumbotron">
+        <p>
+            <a class="btn btn-primary" href="/account/create" th:method="get">회원 가입</a>
+            <a class="btn btn-primary" href="/account/login" th:method="get">로그인</a>
+        </p>
+    </div>
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
 </body>
 </html>
