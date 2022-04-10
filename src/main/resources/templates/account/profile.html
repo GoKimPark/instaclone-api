@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body>
+
+<div th:class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+    <h2 th:text="${profileDto.userInfo.username}"></h2>
+    <ul>
+        <li><span th:text="${profileDto.userInfo.name}"></span></li>
+        <li>Posts <span th:text="${profileDto.userInfo.getPostCount()}"></span></li>
+        <li>Followers <span th:text="${profileDto.userInfo.getFollowerCount()}"></span></li>
+        <li>Following <span th:text="${profileDto.userInfo.getFollowingCount()}"></span></li>
+    </ul>
+    <button class="btn btn-primary" th:if="${profileDto.isOneself}">Edit profile</button>
+    <div th:unless="${profileDto.isOneself}">
+        <button class="btn btn-primary">Follow</button>
+        <button class="btn btn-primary">Message</button>
+    </div>
+    <div th:replace="fragments/footer:: footer"></div>
+</div>
+</body>
+</html>
