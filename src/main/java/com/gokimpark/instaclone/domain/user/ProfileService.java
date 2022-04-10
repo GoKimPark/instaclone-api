@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,7 +35,7 @@ public class ProfileService {
         }
         else {
             profileDto.setIsOneself(false);
-            userInfoDto.setFollow(followService.isFollow(toUser.getId(), fromUser.getId()));
+            userInfoDto.setFollow(followService.isFollowById(toUser.getId(), fromUser.getId()));
         }
         List<PostProfileDto> postProfileDtoList = postService.findAllProfilePostByUser(toUser.getUsername());
         userInfoDto.setPostCount((long) postProfileDtoList.size());
@@ -45,5 +46,17 @@ public class ProfileService {
         userInfoDto.setFollowingCount(followCount.getSecond());
         profileDto.setUserInfo(userInfoDto);
         return profileDto;
+    }
+
+    public List<ProfileUserInfoDto> getAllProfile(String username) {
+        List<UserDto> users = userService.getAllUser();
+        List<ProfileUserInfoDto> userInfoDtoList = new ArrayList<>();
+        for(UserDto user : users) {
+            if(user.getUsername().equals(username)) continue;
+            ProfileUserInfoDto profileUserInfoDto = mapper.map(user, ProfileUserInfoDto.class);
+            profileUserInfoDto.setFollow(followService.isFollowByUsername(user.getUsername(), username));
+            userInfoDtoList.add(profileUserInfoDto);
+        }
+        return userInfoDtoList;
     }
 }

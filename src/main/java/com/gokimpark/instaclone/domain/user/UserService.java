@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -86,5 +89,14 @@ public class UserService {
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
         followService.deleteFollowRelation(user.getId());
         postService.deleteAllByUser(user);
+    }
+
+    public List<UserDto> getAllUser() {
+        List<User> users = userRepository.findAll();
+        List<UserDto> userDtoList = new ArrayList<>();
+        for (User user : users) {
+            userDtoList.add(mapper.map(user, UserDto.class));
+        }
+        return userDtoList;
     }
 }
