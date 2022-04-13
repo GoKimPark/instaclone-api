@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -30,11 +33,14 @@ public class AccountViewController {
     }
 
     @PostMapping("/create")
-    public String createAccount(@Validated @ModelAttribute JoinDto joinDto, BindingResult bindingResult) {
+    public String createAccount(@Validated @ModelAttribute JoinDto joinDto, BindingResult bindingResult,
+                                HttpServletRequest httpServletRequest) {
         if(bindingResult.hasErrors()) {
             return "account/create";
         }
         UserDto user = userService.createAccount(joinDto);
+        HttpSession session = httpServletRequest.getSession();
+        session.setAttribute("username", user.getUsername());
         return "redirect:/";
     }
 
@@ -45,11 +51,23 @@ public class AccountViewController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute LoginDto loginDto, BindingResult bindingResult) {
+    public String login(@Validated @ModelAttribute LoginDto loginDto, BindingResult bindingResult,
+                        HttpServletRequest httpServletRequest) {
         if(bindingResult.hasErrors()) {
             return "account/login";
         }
         UserDto user = userService.login(loginDto.getLoginId(), loginDto.getPassword());
+        HttpSession session = httpServletRequest.getSession();
+        session.setAttribute("username", user.getUsername());
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession();
+        if(session != null) {
+            session.invalidate();
+        }
         return "redirect:/";
     }
 }
