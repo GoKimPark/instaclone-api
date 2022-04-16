@@ -7,7 +7,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class ProfileUserInfoDto {
 
-    private boolean follow;
+    private boolean isFollowing;
+    private String requestedUsername;
     @NotBlank
     private String name;
     @NotBlank
