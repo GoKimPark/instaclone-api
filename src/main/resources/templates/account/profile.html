@@ -34,10 +34,24 @@
     </div>
     <br>
 
-    <button class="btn btn-primary" th:if="${profileDto.isOneself}">Edit profile</button>
+    <button th:if="${profileDto.isOneself}" type="button" class="btn btn-outline-secondary btn-sm">Edit profile</button>
     <div th:unless="${profileDto.isOneself}">
-        <button class="btn btn-primary">Follow</button>
-        <button class="btn btn-primary">Message</button>
+        <div class="row">
+            <div class="col">
+                <form th:if="${profileDto.userInfo.isFollowing}" method="post"
+                      th:action="@{/unfollow/{toUsername}/{fromUsername} (toUsername=${profileDto.userInfo.username}, fromUsername=${profileDto.userInfo.requestedUsername})}">
+                    <button type="submit" class="btn btn-secondary">Following</button>
+                </form>
+                <form th:unless="${profileDto.userInfo.isFollowing}" method="post"
+                      th:action="@{/follow/{toUsername}/{fromUsername} (toUsername=${profileDto.userInfo.username}, fromUsername=${profileDto.userInfo.requestedUsername})}">
+                    <button type="submit" class="btn btn-primary">Follow</button>
+                </form>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-outline-secondary">Message</button>
+            </div>
+        </div>
+
     </div>
     <div th:replace="fragments/footer:: footer"></div>
 </div>
