@@ -1,5 +1,6 @@
 package com.gokimpark.instaclone.web.user;
 
+import com.gokimpark.instaclone.domain.exception.AccountException;
 import com.gokimpark.instaclone.domain.user.UserService;
 import com.gokimpark.instaclone.domain.user.dto.UserDto;
 import com.gokimpark.instaclone.web.user.dto.JoinDto;
@@ -38,9 +39,14 @@ public class AccountViewController {
         if(bindingResult.hasErrors()) {
             return "account/create";
         }
-        UserDto user = userService.createAccount(joinDto);
-        HttpSession session = httpServletRequest.getSession();
-        session.setAttribute("username", user.getUsername());
+        try {
+            UserDto user = userService.createAccount(joinDto);
+            HttpSession session = httpServletRequest.getSession();
+            session.setAttribute("username", user.getUsername());
+        } catch (AccountException e) {
+            bindingResult.reject("duplicate.joinDto.username", e.getMessage());
+            return "account/create";
+        }
         return "redirect:/";
     }
 
@@ -56,9 +62,14 @@ public class AccountViewController {
         if(bindingResult.hasErrors()) {
             return "account/login";
         }
-        UserDto user = userService.login(loginDto.getLoginId(), loginDto.getPassword());
-        HttpSession session = httpServletRequest.getSession();
-        session.setAttribute("username", user.getUsername());
+        try {
+            UserDto user = userService.login(loginDto.getLoginId(), loginDto.getPassword());
+            HttpSession session = httpServletRequest.getSession();
+            session.setAttribute("username", user.getUsername());
+        } catch (AccountException e) {
+            bindingResult.reject("mismatch", e.getMessage());
+            return "account/login";
+        }
         return "redirect:/";
     }
 
