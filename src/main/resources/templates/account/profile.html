@@ -6,12 +6,34 @@
 <div th:class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
     <h2 th:text="${profileDto.userInfo.username}"></h2>
-    <ul>
-        <li><span th:text="${profileDto.userInfo.name}"></span></li>
-        <li>Posts <span th:text="${profileDto.userInfo.getPostCount()}"></span></li>
-        <li>Followers <span th:text="${profileDto.userInfo.getFollowerCount()}"></span></li>
-        <li>Following <span th:text="${profileDto.userInfo.getFollowingCount()}"></span></li>
-    </ul>
+    <br>
+
+    <div class="row justify-content-center">
+        <div class="col">
+          <h4 th:text="${profileDto.userInfo.name}"></h4>
+        </div>
+        <div class="col">
+            <button class="btn btn-light btn-sm">Posts <span th:text="${profileDto.userInfo.getPostCount()}"></span></button>
+        </div>
+        <div class="col">
+            <a th:href="@{/follower/{profileUsername}/{requestedUsername}
+                         (profileUsername=${profileDto.userInfo.username}, requestedUsername=${profileDto.userInfo.requestedUsername})}">
+                <button type="submit" class="btn btn-light btn-sm">
+                Followers <span th:text="${profileDto.userInfo.getFollowerCount()}"></span>
+                </button>
+            </a>
+        </div>
+        <div class="col">
+            <a th:href="@{/following/{profileUsername}/{requestedUsername}
+                         (profileUsername=${profileDto.userInfo.username}, requestedUsername=${profileDto.userInfo.requestedUsername})}">
+                <button type="submit" class="btn btn-light btn-sm">
+                    Following <span th:text="${profileDto.userInfo.getFollowingCount()}"></span>
+                </button>
+            </a>
+        </div>
+    </div>
+    <br>
+
     <button class="btn btn-primary" th:if="${profileDto.isOneself}">Edit profile</button>
     <div th:unless="${profileDto.isOneself}">
         <button class="btn btn-primary">Follow</button>
