@@ -1,5 +1,6 @@
 package com.gokimpark.instaclone.web.user;
 
+import com.gokimpark.instaclone.domain.exception.AccountException;
 import com.gokimpark.instaclone.domain.user.UserService;
 import com.gokimpark.instaclone.domain.user.dto.UserDto;
 import com.gokimpark.instaclone.web.user.dto.JoinDto;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
@@ -30,11 +34,19 @@ public class AccountViewController {
     }
 
     @PostMapping("/create")
-    public String createAccount(@Validated @ModelAttribute JoinDto joinDto, BindingResult bindingResult) {
+    public String createAccount(@Validated @ModelAttribute JoinDto joinDto, BindingResult bindingResult,
+                                HttpServletRequest httpServletRequest) {
         if(bindingResult.hasErrors()) {
             return "account/create";
         }
-        UserDto user = userService.createAccount(joinDto);
+        try {
+            UserDto user = userService.createAccount(joinDto);
+            HttpSession session = httpServletRequest.getSession();
+            session.setAttribute("username", user.getUsername());
+        } catch (AccountException e) {
+            bindingResult.reject("duplicate.joinDto.username", e.getMessage());
+            return "account/create";
+        }
         return "redirect:/";
     }
 
@@ -45,11 +57,28 @@ public class AccountViewController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute LoginDto loginDto, BindingResult bindingResult) {
+    public String login(@Validated @ModelAttribute LoginDto loginDto, BindingResult bindingResult,
+                        HttpServletRequest httpServletRequest) {
         if(bindingResult.hasErrors()) {
             return "account/login";
         }
-        UserDto user = userService.login(loginDto.getLoginId(), loginDto.getPassword());
+        try {
+            UserDto user = userService.login(loginDto.getLoginId(), loginDto.getPassword());
+            HttpSession session = httpServletRequest.getSession();
+            session.setAttribute("username", user.getUsername());
+        } catch (AccountException e) {
+            bindingResult.reject("mismatch", e.getMessage());
+            return "account/login";
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession();
+        if(session != null) {
+            session.invalidate();
+        }
         return "redirect:/";
     }
 }

@@ -1,13 +1,16 @@
 package com.gokimpark.instaclone.domain.user;
 
+import com.gokimpark.instaclone.domain.exception.AccountException;
 import com.gokimpark.instaclone.domain.exception.UserException;
 import com.gokimpark.instaclone.domain.follow.FollowService;
 import com.gokimpark.instaclone.domain.post.PostService;
 import com.gokimpark.instaclone.domain.user.dto.UserDto;
+import com.gokimpark.instaclone.utils.AccountErrorMessage;
 import com.gokimpark.instaclone.web.user.dto.EditDto;
 import com.gokimpark.instaclone.web.user.dto.JoinDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +28,7 @@ public class UserService {
     ModelMapper mapper = new ModelMapper();
 
     @Transactional
-    public UserDto createAccount(JoinDto joinDto) {
-
+    public UserDto createAccount(JoinDto joinDto) throws AccountException {
         User user = User.builder()
                 .email(joinDto.getEmail())
                 .name(joinDto.getName())
@@ -34,14 +36,17 @@ public class UserService {
                 .password(joinDto.getPassword())
                 .build();
 
-        User savedUser = userRepository.save(user);
-        return mapper.map(savedUser, UserDto.class);
+        try {
+            User savedUser = userRepository.save(user);
+            return mapper.map(savedUser, UserDto.class);
+        } catch (DataIntegrityViolationException e) {
+            throw new AccountException(AccountErrorMessage.DUPLICATE_USERNAME);
+        }
     }
 
-    public UserDto login(String loginId, String password){
-
-        User user = userRepository.findByEmailOrUsername(loginId, loginId).orElseThrow(UserException::new);
-        if(!user.isEqualPassword(password)) throw new UserException("잘못된 비밀번호 입니다.");
+    public UserDto login(String loginId, String password) throws AccountException {
+        User user = userRepository.findByEmailOrUsername(loginId, loginId).orElseThrow(() -> new AccountException(AccountErrorMessage.MISMATCH_LOGIN_ID));
+        if(!user.isEqualPassword(password)) throw new AccountException(AccountErrorMessage.MISMATCH_PASSWORD);
         return mapper.map(user, UserDto.class);
     }
 
@@ -73,7 +78,6 @@ public class UserService {
     @Transactional
     public UserDto updateProfile(EditDto editDto) {
         User user = userRepository.findById(editDto.getUserId()).orElseThrow(UserException::new);
-
         user.setName(editDto.getName());
         user.setUsername(editDto.getUsername());
         user.setWebsite(editDto.getWebSite());

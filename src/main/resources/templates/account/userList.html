@@ -14,8 +14,22 @@
             </thead>
             <tbody>
             <tr th:each="user : ${users}">
-                <td th:text="${user.username}"></td>
+                <td>
+                    <button class="btn btn-outline-secondary" th:text="${user.username}"
+                            th:onclick="|location.href='@{/profile/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestedUsername})}'|">
+                    </button>
+                </td>
                 <td th:text="${user.name}"></td>
+                <td>
+                    <form th:if="${user.isFollowing}" method="post"
+                          th:action="@{/unfollow/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestedUsername})}">
+                        <button type="submit" class="btn btn-secondary">Following</button>
+                    </form>
+                    <form th:unless="${user.isFollowing}" method="post"
+                       th:action="@{/follow/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestedUsername})}">
+                        <button type="submit" class="btn btn-primary">Follow</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>

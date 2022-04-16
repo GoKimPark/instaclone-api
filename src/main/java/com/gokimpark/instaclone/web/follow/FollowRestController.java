@@ -1,7 +1,7 @@
 package com.gokimpark.instaclone.web.follow;
 
 import com.gokimpark.instaclone.domain.follow.FollowService;
-import com.gokimpark.instaclone.domain.follow.dto.FollowSimpleListDto;
+import com.gokimpark.instaclone.domain.follow.dto.UserSimpleInfoDto;
 import com.gokimpark.instaclone.domain.user.ProfileService;
 import com.gokimpark.instaclone.domain.user.dto.ProfileDto;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/REST")
 @RequiredArgsConstructor
-public class FollowController {
+public class FollowRestController {
 
     private final FollowService followService;
     private final ProfileService profileService;
@@ -38,15 +39,15 @@ public class FollowController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/follower/{username}")
-    public ResponseEntity<?> getFollower(@PathVariable String username){
-        List<FollowSimpleListDto> followerList = followService.getFollowerList(username);
+    @GetMapping("/follower/{profileUsername}/{requestedUsername}")
+    public ResponseEntity<?> getFollower(@PathVariable String profileUsername, @PathVariable String requestedUsername){
+        List<UserSimpleInfoDto> followerList = followService.getFollowRelationList("follower", profileUsername, requestedUsername);
         return new ResponseEntity<>(followerList, HttpStatus.OK);
     }
 
-    @GetMapping("/following/{username}")
-    public ResponseEntity<?> getFollowing(@PathVariable String username){
-        List<FollowSimpleListDto> followingList = followService.getFollowingList(username);
+    @GetMapping("/following/{profileUsername}/{requestedUsername}")
+    public ResponseEntity<?> getFollowing(@PathVariable String profileUsername, @PathVariable String requestedUsername){
+        List<UserSimpleInfoDto> followingList = followService.getFollowRelationList("following", profileUsername, requestedUsername);
         return new ResponseEntity<>(followingList, HttpStatus.OK);
     }
 }

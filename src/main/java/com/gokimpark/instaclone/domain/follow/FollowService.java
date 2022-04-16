@@ -2,7 +2,7 @@ package com.gokimpark.instaclone.domain.follow;
 
 import com.gokimpark.instaclone.domain.exception.FollowException;
 import com.gokimpark.instaclone.domain.exception.UserException;
-import com.gokimpark.instaclone.domain.follow.dto.FollowSimpleListDto;
+import com.gokimpark.instaclone.domain.follow.dto.UserSimpleInfoDto;
 import com.gokimpark.instaclone.domain.user.User;
 import com.gokimpark.instaclone.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -55,14 +55,29 @@ public class FollowService {
         if(toUsername.equals(fromUsername)) throw new FollowException("follower 와 following 의 대상이 동일합니다.");
     }
 
-    public List<FollowSimpleListDto> getFollowingList(String username){
-        User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
-        return followRepository.findAllByFromUser(user.getId());
-    }
+    public List<UserSimpleInfoDto> getFollowRelationList(String follow, String profileUsername, String requestedUsername){
+        User profileUser = userRepository.findByUsername(profileUsername).orElseThrow(UserException::new);
+        User requestedUser = userRepository.findByUsername(requestedUsername).orElseThrow(UserException::new);
 
-    public List<FollowSimpleListDto> getFollowerList(String username){
-        User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
-        return followRepository.findAllByToUser(user.getId());
+        List<UserSimpleInfoDto> followList = null;
+        if(follow.equals("following")) {
+            followList = followRepository.findAllByFromUser(profileUser.getId());
+        }
+        else if(follow.equals("follower")) {
+            followList = followRepository.findAllByToUser(profileUser.getId());
+        }
+        assert followList != null;
+        for(UserSimpleInfoDto userSimpleInfoDto : followList) {
+            userSimpleInfoDto.setRequestedUsername(requestedUsername);
+            if(profileUsername.equals(requestedUsername)) {
+                userSimpleInfoDto.setIsFollowing(true);
+            }
+            else {
+                User toUser = userRepository.findByUsername(userSimpleInfoDto.getUsername()).orElseThrow(UserException::new);
+                userSimpleInfoDto.setIsFollowing(isFollowingById(toUser.getId(), requestedUser.getId()));
+            }
+        }
+        return followList;
     }
 
     public Long getFollowingCount(String username){
@@ -84,13 +99,13 @@ public class FollowService {
         followRepository.deleteAllByToUser(userId);
     }
 
-    public boolean isFollowById(Long toUserId, Long fromUserId) {
+    public boolean isFollowingById(Long toUserId, Long fromUserId) {
         return followRepository.findByToUserAndFromUser(toUserId, fromUserId).isPresent();
     }
 
-    public boolean isFollowByUsername(String toUsername, String fromUsername) {
+    public boolean isFollowingByUsername(String toUsername, String fromUsername) {
         User toUser = userRepository.findByUsername(toUsername).orElseThrow(UserException::new);
         User fromUser = userRepository.findByUsername(fromUsername).orElseThrow(UserException::new);
-        return isFollowById(toUser.getId(), fromUser.getId());
+        return isFollowingById(toUser.getId(), fromUser.getId());
     }
 }

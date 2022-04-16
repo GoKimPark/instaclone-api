@@ -30,12 +30,13 @@ public class ProfileService {
 
         ProfileDto profileDto = new ProfileDto();
         ProfileUserInfoDto userInfoDto = mapper.map(toUser, ProfileUserInfoDto.class);
+        userInfoDto.setRequestedUsername(fromUsername);
         if(fromUser.getId().equals(toUser.getId())) {
             profileDto.setIsOneself(true);
         }
         else {
             profileDto.setIsOneself(false);
-            userInfoDto.setFollow(followService.isFollowById(toUser.getId(), fromUser.getId()));
+            userInfoDto.setFollowing(followService.isFollowingById(toUser.getId(), fromUser.getId()));
         }
         List<PostProfileDto> postProfileDtoList = postService.findAllProfilePostByUser(toUser.getUsername());
         userInfoDto.setPostCount((long) postProfileDtoList.size());
@@ -54,7 +55,8 @@ public class ProfileService {
         for(UserDto user : users) {
             if(user.getUsername().equals(username)) continue;
             ProfileUserInfoDto profileUserInfoDto = mapper.map(user, ProfileUserInfoDto.class);
-            profileUserInfoDto.setFollow(followService.isFollowByUsername(user.getUsername(), username));
+            profileUserInfoDto.setRequestedUsername(username);
+            profileUserInfoDto.setFollowing(followService.isFollowingByUsername(user.getUsername(), username));
             userInfoDtoList.add(profileUserInfoDto);
         }
         return userInfoDtoList;
