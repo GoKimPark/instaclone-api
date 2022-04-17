@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/account")
-public class AccountViewController {
+public class AccountController {
 
     private final UserService userService;
 

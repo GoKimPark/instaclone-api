@@ -17,7 +17,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/profile")
-public class ProfileViewController {
+public class ProfileController {
 
     private final ProfileService profileService;
 

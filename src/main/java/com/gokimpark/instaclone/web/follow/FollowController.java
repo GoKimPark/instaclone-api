@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class FollowViewController {
+public class FollowController {
 
     private final FollowService followService;
     private final ProfileService profileService;
