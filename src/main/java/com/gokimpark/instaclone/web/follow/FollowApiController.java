@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/REST")
+@RequestMapping("/api")
 @RequiredArgsConstructor
-public class FollowRestController {
+public class FollowApiController {
 
     private final FollowService followService;
     private final ProfileService profileService;
