@@ -13,12 +13,12 @@
           <h4 th:text="${profileDto.userInfo.name}"></h4>
         </div>
         <div class="col">
-            <button class="btn btn-light btn-sm">Posts <span th:text="${profileDto.userInfo.getPostCount()}"></span></button>
+            <button class="btn btn-light">Posts <span th:text="${profileDto.userInfo.getPostCount()}"></span></button>
         </div>
         <div class="col">
             <a th:href="@{/follower/{profileUsername}/{requestedUsername}
                          (profileUsername=${profileDto.userInfo.username}, requestedUsername=${profileDto.userInfo.requestedUsername})}">
-                <button type="submit" class="btn btn-light btn-sm">
+                <button type="submit" class="btn btn-light">
                 Followers <span th:text="${profileDto.userInfo.getFollowerCount()}"></span>
                 </button>
             </a>
@@ -26,7 +26,7 @@
         <div class="col">
             <a th:href="@{/following/{profileUsername}/{requestedUsername}
                          (profileUsername=${profileDto.userInfo.username}, requestedUsername=${profileDto.userInfo.requestedUsername})}">
-                <button type="submit" class="btn btn-light btn-sm">
+                <button type="submit" class="btn btn-light">
                     Following <span th:text="${profileDto.userInfo.getFollowingCount()}"></span>
                 </button>
             </a>
@@ -40,15 +40,15 @@
             <div class="col">
                 <form th:if="${profileDto.userInfo.isFollowing}" method="post"
                       th:action="@{/unfollow/{toUsername}/{fromUsername} (toUsername=${profileDto.userInfo.username}, fromUsername=${profileDto.userInfo.requestedUsername})}">
-                    <button type="submit" class="btn btn-secondary">Following</button>
+                    <button type="submit" class="btn btn-secondary col-md-5">Following</button>
                 </form>
                 <form th:unless="${profileDto.userInfo.isFollowing}" method="post"
                       th:action="@{/follow/{toUsername}/{fromUsername} (toUsername=${profileDto.userInfo.username}, fromUsername=${profileDto.userInfo.requestedUsername})}">
-                    <button type="submit" class="btn btn-primary">Follow</button>
+                    <button type="submit" class="btn btn-primary col-md-5">Follow</button>
                 </form>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-outline-secondary">Message</button>
+                <button type="button" class="btn btn-outline-secondary col-md-5">Message</button>
             </div>
         </div>
 
