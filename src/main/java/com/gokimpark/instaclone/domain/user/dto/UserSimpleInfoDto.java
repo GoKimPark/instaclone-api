@@ -1,12 +1,13 @@
-package com.gokimpark.instaclone.domain.follow.dto;
+package com.gokimpark.instaclone.domain.user.dto;
 
+import com.gokimpark.instaclone.domain.follow.FollowStatus;
 import lombok.Data;
 
 @Data
 public class UserSimpleInfoDto {
 
     private String requestedUsername;
-    private Boolean isFollowing;
+    private FollowStatus followStatus;
 
     private String username;
     private String name;

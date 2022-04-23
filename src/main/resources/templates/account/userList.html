@@ -21,11 +21,11 @@
                 </td>
                 <td th:text="${user.name}"></td>
                 <td>
-                    <form th:if="${user.isFollowing}" method="post"
+                    <form th:if="${T(com.gokimpark.instaclone.domain.follow.FollowStatus).FOLLOWING.equals(user.followStatus)}" method="post"
                           th:action="@{/unfollow/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestedUsername})}">
                         <button type="submit" class="btn btn-secondary">Following</button>
                     </form>
-                    <form th:unless="${user.isFollowing}" method="post"
+                    <form th:if="${T(com.gokimpark.instaclone.domain.follow.FollowStatus).UNFOLLOW.equals(user.followStatus)}" method="post"
                        th:action="@{/follow/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestedUsername})}">
                         <button type="submit" class="btn btn-primary">Follow</button>
                     </form>

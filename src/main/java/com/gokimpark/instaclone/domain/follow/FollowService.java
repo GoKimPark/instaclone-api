@@ -2,7 +2,7 @@ package com.gokimpark.instaclone.domain.follow;
 
 import com.gokimpark.instaclone.domain.exception.FollowException;
 import com.gokimpark.instaclone.domain.exception.UserException;
-import com.gokimpark.instaclone.domain.follow.dto.UserSimpleInfoDto;
+import com.gokimpark.instaclone.domain.user.dto.UserSimpleInfoDto;
 import com.gokimpark.instaclone.domain.user.User;
 import com.gokimpark.instaclone.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -70,11 +70,17 @@ public class FollowService {
         for(UserSimpleInfoDto userSimpleInfoDto : followList) {
             userSimpleInfoDto.setRequestedUsername(requestedUsername);
             if(profileUsername.equals(requestedUsername)) {
-                userSimpleInfoDto.setIsFollowing(true);
+                userSimpleInfoDto.setFollowStatus(FollowStatus.FOLLOWING);
+            }
+            else if(userSimpleInfoDto.getUsername().equals(requestedUsername)) {
+                userSimpleInfoDto.setFollowStatus(FollowStatus.ONESELF);
             }
             else {
                 User toUser = userRepository.findByUsername(userSimpleInfoDto.getUsername()).orElseThrow(UserException::new);
-                userSimpleInfoDto.setIsFollowing(isFollowingById(toUser.getId(), requestedUser.getId()));
+                if(isFollowingById(toUser.getId(), requestedUser.getId()))
+                    userSimpleInfoDto.setFollowStatus(FollowStatus.FOLLOWING);
+                else
+                    userSimpleInfoDto.setFollowStatus(FollowStatus.UNFOLLOW);
             }
         }
         return followList;
