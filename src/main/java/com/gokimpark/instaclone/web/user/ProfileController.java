@@ -2,7 +2,7 @@ package com.gokimpark.instaclone.web.user;
 
 import com.gokimpark.instaclone.domain.user.ProfileService;
 import com.gokimpark.instaclone.domain.user.dto.ProfileDto;
-import com.gokimpark.instaclone.domain.user.dto.ProfileUserInfoDto;
+import com.gokimpark.instaclone.domain.user.dto.UserSimpleInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,7 @@ public class ProfileController {
 
     @GetMapping("/users/{username}")
     public String showAllUserSimpleProfile(@PathVariable String username, Model model) {
-        List<ProfileUserInfoDto> users = profileService.getAllProfile(username);
+        List<UserSimpleInfoDto> users = profileService.getAllSimpleProfile(username);
         model.addAttribute("users", users);
         return "account/userList";
     }

@@ -1,7 +1,7 @@
 package com.gokimpark.instaclone.web.follow;
 
 import com.gokimpark.instaclone.domain.follow.FollowService;
-import com.gokimpark.instaclone.domain.follow.dto.UserSimpleInfoDto;
+import com.gokimpark.instaclone.domain.user.dto.UserSimpleInfoDto;
 import com.gokimpark.instaclone.domain.user.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
