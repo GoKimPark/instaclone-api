@@ -1,12 +1,15 @@
 package com.gokimpark.instaclone.domain.user;
 
 import com.gokimpark.instaclone.domain.follow.FollowService;
+import com.gokimpark.instaclone.domain.follow.FollowStatus;
 import com.gokimpark.instaclone.domain.post.PostService;
 import com.gokimpark.instaclone.domain.post.dto.PostProfileDto;
 import com.gokimpark.instaclone.domain.user.dto.UserDto;
 import com.gokimpark.instaclone.domain.user.dto.ProfileDto;
 import com.gokimpark.instaclone.domain.user.dto.ProfileUserInfoDto;
+import com.gokimpark.instaclone.domain.user.dto.UserSimpleInfoDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
@@ -49,16 +53,21 @@ public class ProfileService {
         return profileDto;
     }
 
-    public List<ProfileUserInfoDto> getAllProfile(String username) {
+    public List<UserSimpleInfoDto> getAllSimpleProfile(String username) {
         List<UserDto> users = userService.getAllUser();
-        List<ProfileUserInfoDto> userInfoDtoList = new ArrayList<>();
+        List<UserSimpleInfoDto> userSimpleInfoDtoList = new ArrayList<>();
         for(UserDto user : users) {
             if(user.getUsername().equals(username)) continue;
-            ProfileUserInfoDto profileUserInfoDto = mapper.map(user, ProfileUserInfoDto.class);
-            profileUserInfoDto.setRequestedUsername(username);
-            profileUserInfoDto.setFollowing(followService.isFollowingByUsername(user.getUsername(), username));
-            userInfoDtoList.add(profileUserInfoDto);
+            UserSimpleInfoDto userSimpleInfoDto = new UserSimpleInfoDto(user.getUsername(), user.getName());
+            userSimpleInfoDto.setRequestedUsername(username);
+
+            if(followService.isFollowingByUsername(user.getUsername(), username))
+                userSimpleInfoDto.setFollowStatus(FollowStatus.FOLLOWING);
+            else
+                userSimpleInfoDto.setFollowStatus(FollowStatus.UNFOLLOW);
+
+            userSimpleInfoDtoList.add(userSimpleInfoDto);
         }
-        return userInfoDtoList;
+        return userSimpleInfoDtoList;
     }
 }
