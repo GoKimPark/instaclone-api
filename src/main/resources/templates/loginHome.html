@@ -8,8 +8,8 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
     <div class="jumbotron">
         <p>
-            <a class="btn btn-primary" href="/account/create" th:method="get">회원 가입</a>
-            <a class="btn btn-primary" href="/account/login" th:method="get">로그인</a>
+            <a class="btn btn-primary" href="/account/create" th:method="get" th:text="#{account.signUp}">회원 가입</a>
+            <a class="btn btn-primary" href="/account/login" th:method="get" th:text="#{account.signIn}">로그인</a>
         </p>
     </div>
     <div th:replace="fragments/footer :: footer"></div>
