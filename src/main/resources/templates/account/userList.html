@@ -8,9 +8,9 @@
         <table class = "table table-striped">
             <thead>
             <tr>
-                <th class="col-md-4">사용자 이름</th>
-                <th class="col-md-4">성명</th>
-                <th class="col-md-4">팔로우 상태</th>
+                <th class="col-md-4" th:text="#{member.username}">사용자 이름</th>
+                <th class="col-md-4" th:text="#{member.name}">성명</th>
+                <th class="col-md-4" th:text="#{follow.status}">팔로우 상태</th>
             </tr>
             </thead>
             <tbody>
@@ -24,11 +24,11 @@
                 <td>
                     <form th:if="${T(com.gokimpark.instaclone.domain.follow.FollowStatus).FOLLOWING.equals(user.followStatus)}" method="post"
                           th:action="@{/unfollow/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestedUsername})}">
-                        <button type="submit" class="btn btn-secondary">Following</button>
+                        <button type="submit" class="btn btn-secondary" th:text="#{follow.following}">Following</button>
                     </form>
                     <form th:if="${T(com.gokimpark.instaclone.domain.follow.FollowStatus).UNFOLLOW.equals(user.followStatus)}" method="post"
                        th:action="@{/follow/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestedUsername})}">
-                        <button type="submit" class="btn btn-primary">Follow</button>
+                        <button type="submit" class="btn btn-primary" th:text="#{follow.unfollow}">Follow</button>
                     </form>
                 </td>
             </tr>

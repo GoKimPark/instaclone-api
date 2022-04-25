@@ -13,42 +13,42 @@
           <h4 th:text="${profileDto.userInfo.name}"></h4>
         </div>
         <div class="col">
-            <button class="btn btn-light">Posts <span th:text="${profileDto.userInfo.getPostCount()}"></span></button>
+            <button class="btn btn-light" th:text="#{post} + ' ' + ${profileDto.userInfo.getPostCount()}">Posts</button>
         </div>
         <div class="col">
             <a th:href="@{/follower/{profileUsername}/{requestedUsername}
                          (profileUsername=${profileDto.userInfo.username}, requestedUsername=${profileDto.userInfo.requestedUsername})}">
-                <button type="submit" class="btn btn-light">
-                Followers <span th:text="${profileDto.userInfo.getFollowerCount()}"></span>
+                <button type="submit" class="btn btn-light"
+                        th:text="#{follow.followers} + ' ' + ${profileDto.userInfo.getFollowerCount()}">
                 </button>
             </a>
         </div>
         <div class="col">
             <a th:href="@{/following/{profileUsername}/{requestedUsername}
                          (profileUsername=${profileDto.userInfo.username}, requestedUsername=${profileDto.userInfo.requestedUsername})}">
-                <button type="submit" class="btn btn-light">
-                    Following <span th:text="${profileDto.userInfo.getFollowingCount()}"></span>
+                <button type="submit" class="btn btn-light"
+                        th:text="#{follow.following} + ' ' + ${profileDto.userInfo.getFollowingCount()}">
                 </button>
             </a>
         </div>
     </div>
     <br>
 
-    <button th:if="${profileDto.isOneself}" type="button" class="btn btn-outline-secondary btn-sm">Edit profile</button>
+    <button th:if="${profileDto.isOneself}" type="button" class="btn btn-outline-secondary btn-sm" th:text="#{profile.edit}">Edit profile</button>
     <div th:unless="${profileDto.isOneself}">
         <div class="row">
             <div class="col">
                 <form th:if="${profileDto.userInfo.isFollowing}" method="post"
                       th:action="@{/unfollow/{toUsername}/{fromUsername} (toUsername=${profileDto.userInfo.username}, fromUsername=${profileDto.userInfo.requestedUsername})}">
-                    <button type="submit" class="btn btn-secondary col-md-5">Following</button>
+                    <button type="submit" class="btn btn-secondary col-md-5" th:text="#{follow.following}">Following</button>
                 </form>
                 <form th:unless="${profileDto.userInfo.isFollowing}" method="post"
                       th:action="@{/follow/{toUsername}/{fromUsername} (toUsername=${profileDto.userInfo.username}, fromUsername=${profileDto.userInfo.requestedUsername})}">
-                    <button type="submit" class="btn btn-primary col-md-5">Follow</button>
+                    <button type="submit" class="btn btn-primary col-md-5" th:text="#{follow.unfollow}">Follow</button>
                 </form>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-outline-secondary col-md-5">Message</button>
+                <button type="button" class="btn btn-outline-secondary col-md-5" th:text="#{profile.message}">Message</button>
             </div>
         </div>
 

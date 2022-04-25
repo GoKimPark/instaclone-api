@@ -9,12 +9,12 @@
     <div class="jumbotron">
 
         <ul>
-            <button class="btn btn-primary" th:onclick="|location.href='@{/profile/{username}/{username}(username=${user.username})}'|">프로필</button>
-            <button class="btn btn-primary" th:onClick="|location.href='@{/account/logout}'|">로그아웃</button>
+            <button class="btn btn-primary" th:onclick="|location.href='@{/profile/{username}/{username}(username=${user.username})}'|" th:text="#{profile}">프로필</button>
+            <button class="btn btn-primary" th:onClick="|location.href='@{/account/logout}'|" th:text="#{account.logOut}">로그아웃</button>
         </ul>
         <ul>
-            <button class="btn btn-primary" th:onclick="|location.href='@{/profile/users/{username}(username=${user.username})}'|">회원 리스트</button>
-            <button class="btn btn-primary" th:onClick="|location.href='@{}'|">게시물 리스트</button>
+            <button class="btn btn-primary" th:onclick="|location.href='@{/profile/users/{username}(username=${user.username})}'|" th:text="#{member.list}">회원 리스트</button>
+            <button class="btn btn-primary" th:onClick="|location.href='@{}'|" th:text="#{post}">게시물 리스트</button>
         </ul>
     </div>
     <div th:replace="fragments/footer :: footer"></div>
