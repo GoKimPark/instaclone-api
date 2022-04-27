@@ -8,8 +8,8 @@ import javax.validation.constraints.NotBlank;
 public class ProfileRequestDto {
 
     @NotBlank
-    private String targetUsername;
+    private String toUsername;
 
     @NotBlank
-    private String requestedUsername;
+    private String fromUsername;
 }

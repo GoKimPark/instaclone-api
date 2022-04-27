@@ -2,7 +2,6 @@ package com.gokimpark.instaclone.web.follow;
 
 import com.gokimpark.instaclone.domain.follow.FollowService;
 import com.gokimpark.instaclone.domain.user.dto.UserSimpleInfoDto;
-import com.gokimpark.instaclone.domain.user.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import java.util.List;
 public class FollowController {
 
     private final FollowService followService;
-    private final ProfileService profileService;
 
     @PostMapping("/follow/{toUsername}/{fromUsername}")
     public String addFollow(@PathVariable String toUsername, @PathVariable String fromUsername){
@@ -33,16 +31,16 @@ public class FollowController {
         return "redirect:/profile/{toUsername}/{fromUsername}";
     }
 
-    @GetMapping("/follower/{fromUsername}/{requestedUsername}")
-    public String getFollower(@PathVariable String fromUsername, @PathVariable String requestedUsername, Model model){
-        List<UserSimpleInfoDto> followerList = followService.getFollowRelationList("follower", fromUsername, requestedUsername);
+    @GetMapping("/follower/{username}/{requestingUsername}")
+    public String getFollower(@PathVariable String username, @PathVariable String requestingUsername, Model model){
+        List<UserSimpleInfoDto> followerList = followService.getFollowerList(username, requestingUsername);
         model.addAttribute("users", followerList);
         return "/account/userList";
     }
 
-    @GetMapping("/following/{fromUsername}/{requestedUsername}")
-    public String getFollowing(@PathVariable String fromUsername, @PathVariable String requestedUsername, Model model){
-        List<UserSimpleInfoDto> followingList = followService.getFollowRelationList("following", fromUsername, requestedUsername);
+    @GetMapping("/following/{username}/{requestingUsername}")
+    public String getFollowing(@PathVariable String username, @PathVariable String requestingUsername, Model model){
+        List<UserSimpleInfoDto> followingList = followService.getFollowingList(username, requestingUsername);
         model.addAttribute("users", followingList);
         return "/account/userList";
     }

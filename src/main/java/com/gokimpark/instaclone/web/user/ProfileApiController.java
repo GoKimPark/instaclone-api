@@ -30,7 +30,7 @@ public class ProfileApiController {
         if(bindingResult.hasErrors())
             return new ResponseEntity<>(profileRequestDto, HttpStatus.BAD_REQUEST);
 
-        ProfileDto profileDto = profileService.getProfile(profileRequestDto.getTargetUsername(), profileRequestDto.getRequestedUsername());
+        ProfileDto profileDto = profileService.getProfile(profileRequestDto.getToUsername(), profileRequestDto.getFromUsername());
         return new ResponseEntity<>(profileDto, HttpStatus.OK);
     }
 

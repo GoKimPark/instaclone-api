@@ -17,17 +17,17 @@
             <tr th:each="user : ${users}">
                 <td>
                     <button class="btn btn-outline-secondary" th:text="${user.username}"
-                            th:onclick="|location.href='@{/profile/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestedUsername})}'|">
+                            th:onclick="|location.href='@{/profile/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestingUsername})}'|">
                     </button>
                 </td>
                 <td th:text="${user.name}"></td>
                 <td>
                     <form th:if="${T(com.gokimpark.instaclone.domain.follow.FollowStatus).FOLLOWING.equals(user.followStatus)}" method="post"
-                          th:action="@{/unfollow/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestedUsername})}">
+                          th:action="@{/unfollow/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestingUsername})}">
                         <button type="submit" class="btn btn-secondary" th:text="#{follow.following}">Following</button>
                     </form>
                     <form th:if="${T(com.gokimpark.instaclone.domain.follow.FollowStatus).UNFOLLOW.equals(user.followStatus)}" method="post"
-                       th:action="@{/follow/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestedUsername})}">
+                       th:action="@{/follow/{toUsername}/{fromUsername} (toUsername=${user.username}, fromUsername=${user.requestingUsername})}">
                         <button type="submit" class="btn btn-primary" th:text="#{follow.unfollow}">Follow</button>
                     </form>
                 </td>

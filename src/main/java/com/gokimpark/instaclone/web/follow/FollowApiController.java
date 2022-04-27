@@ -41,13 +41,13 @@ public class FollowApiController {
 
     @GetMapping("/follower/{profileUsername}/{requestedUsername}")
     public ResponseEntity<?> getFollower(@PathVariable String profileUsername, @PathVariable String requestedUsername){
-        List<UserSimpleInfoDto> followerList = followService.getFollowRelationList("follower", profileUsername, requestedUsername);
+        List<UserSimpleInfoDto> followerList = followService.getFollowerList(profileUsername, requestedUsername);
         return new ResponseEntity<>(followerList, HttpStatus.OK);
     }
 
     @GetMapping("/following/{profileUsername}/{requestedUsername}")
     public ResponseEntity<?> getFollowing(@PathVariable String profileUsername, @PathVariable String requestedUsername){
-        List<UserSimpleInfoDto> followingList = followService.getFollowRelationList("following", profileUsername, requestedUsername);
+        List<UserSimpleInfoDto> followingList = followService.getFollowingList(profileUsername, requestedUsername);
         return new ResponseEntity<>(followingList, HttpStatus.OK);
     }
 }

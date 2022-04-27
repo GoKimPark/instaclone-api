@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TraceAspect {
 
-    @Around("com.gokimpark.instaclone.aspect.Pointcuts.serviceAndRepoLayer() && @target(trace)")
-    public Object doTrace(ProceedingJoinPoint joinPoint, Trace trace) throws Throwable {
+    @Around("com.gokimpark.instaclone.aspect.Pointcuts.serviceAndRepoLayer()")
+    public Object doTrace(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             log.info("[Trace begin] {}", joinPoint.getSignature());
             Object result = joinPoint.proceed();

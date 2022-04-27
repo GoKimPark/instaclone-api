@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class UserSimpleInfoDto {
 
-    private String requestedUsername;
+    private String requestingUsername;
     private FollowStatus followStatus;
 
     private String username;
