@@ -10,8 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -61,17 +63,16 @@ public class FollowService {
 
         List<UserSimpleInfoDto>  usersWhoFollowedUser = followRepository.findAllByToUser(user.getId());
         if(username.equals(requestingUsername)) {
+            Set<String> usernameFollowedByUser = getAllUsernameFollowedByUser(user.getId());
             for(UserSimpleInfoDto userInfo : usersWhoFollowedUser) {
-                userInfo.setRequestingUsername(username);
-                User targetUser = userRepository.findByUsername(userInfo.getUsername()).orElseThrow(UserException::new);
-                setFollowStatus(userInfo, targetUser.getId(), user.getId());
+                setFollowStatus(userInfo.getUsername(), user.getUsername(), usernameFollowedByUser, userInfo);
             }
         }
         else {
+            Set<String> usernameFollowedByRequestingUser = getAllUsernameFollowedByUser(requestingUser.getId());
             for(UserSimpleInfoDto userInfo : usersWhoFollowedUser) {
                 userInfo.setRequestingUsername(requestingUsername);
-                User targetUser = userRepository.findByUsername(userInfo.getUsername()).orElseThrow(UserException::new);
-                setFollowStatus(userInfo, targetUser.getId(), requestingUser.getId());
+                setFollowStatus(userInfo.getUsername(), requestingUser.getUsername(), usernameFollowedByRequestingUser, userInfo);
             }
         }
         return usersWhoFollowedUser;
@@ -89,10 +90,10 @@ public class FollowService {
             }
         }
         else {
+            Set<String> usernameFollowedByRequestingUser = getAllUsernameFollowedByUser(requestingUser.getId());
             for(UserSimpleInfoDto userInfo : usersFollowedByUser) {
                 userInfo.setRequestingUsername(requestingUsername);
-                User targetUser = userRepository.findByUsername(userInfo.getUsername()).orElseThrow(UserException::new);
-                setFollowStatus(userInfo, targetUser.getId(), requestingUser.getId());
+                setFollowStatus(userInfo.getUsername(), requestingUsername, usernameFollowedByRequestingUser, userInfo);
             }
         }
         return usersFollowedByUser;
@@ -127,12 +128,23 @@ public class FollowService {
         return isFollowingById(toUser.getId(), fromUser.getId());
     }
 
-    public void setFollowStatus(UserSimpleInfoDto userInfo, Long toUserId, Long fromUserId) {
-        if(toUserId.equals(fromUserId))
+    public void setFollowStatus(String targetUsername, String requestingUsername, Set<String> usernameFollowedByRequestingUser, UserSimpleInfoDto userInfo) {
+        if(requestingUsername.equals(targetUsername))
             userInfo.setFollowStatus(FollowStatus.ONESELF);
-        else if(isFollowingById(toUserId, fromUserId))
+        else if(usernameFollowedByRequestingUser.contains(targetUsername))
             userInfo.setFollowStatus(FollowStatus.FOLLOWING);
         else
             userInfo.setFollowStatus(FollowStatus.UNFOLLOW);
     }
+
+    public Set<String> getAllUsernameFollowedByUser(Long userId) {
+        List<UserSimpleInfoDto> followRelationList = followRepository.findAllByFromUser(userId);
+
+        Set<String> usernameSet = new HashSet<>();
+        for(UserSimpleInfoDto userSimpleInfo : followRelationList) {
+            usernameSet.add(userSimpleInfo.getUsername());
+        }
+        return usernameSet;
+    }
+
 }
