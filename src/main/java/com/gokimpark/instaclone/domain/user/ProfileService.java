@@ -34,7 +34,7 @@ public class ProfileService {
 
         ProfileDto profileDto = new ProfileDto();
         ProfileUserInfoDto userInfoDto = mapper.map(toUser, ProfileUserInfoDto.class);
-        userInfoDto.setRequestedUsername(fromUsername);
+        userInfoDto.setRequestingUsername(fromUsername);
         if(fromUser.getId().equals(toUser.getId())) {
             profileDto.setIsOneself(true);
         }
@@ -59,7 +59,7 @@ public class ProfileService {
         for(UserDto user : users) {
             if(user.getUsername().equals(username)) continue;
             UserSimpleInfoDto userSimpleInfoDto = new UserSimpleInfoDto(user.getUsername(), user.getName());
-            userSimpleInfoDto.setRequestedUsername(username);
+            userSimpleInfoDto.setRequestingUsername(username);
 
             if(followService.isFollowingByUsername(user.getUsername(), username))
                 userSimpleInfoDto.setFollowStatus(FollowStatus.FOLLOWING);

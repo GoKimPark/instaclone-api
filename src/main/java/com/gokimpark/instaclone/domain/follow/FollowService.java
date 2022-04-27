@@ -55,29 +55,27 @@ public class FollowService {
         if(toUsername.equals(fromUsername)) throw new FollowException("follower 와 following 의 대상이 동일합니다.");
     }
 
-    public List<UserSimpleInfoDto> getFollowRelationList(String follow, String profileUsername, String requestedUsername){
-        User profileUser = userRepository.findByUsername(profileUsername).orElseThrow(UserException::new);
-        User requestedUser = userRepository.findByUsername(requestedUsername).orElseThrow(UserException::new);
+    public List<UserSimpleInfoDto> getFollowRelationList(String follow, String username, String requestingUsername){
+        User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
+        User requestingUser = userRepository.findByUsername(requestingUsername).orElseThrow(UserException::new);
 
         List<UserSimpleInfoDto> followList = null;
         if(follow.equals("following")) {
-            followList = followRepository.findAllByFromUser(profileUser.getId());
+            followList = followRepository.findAllByFromUser(user.getId());
         }
         else if(follow.equals("follower")) {
-            followList = followRepository.findAllByToUser(profileUser.getId());
+            followList = followRepository.findAllByToUser(user.getId());
         }
         assert followList != null;
         for(UserSimpleInfoDto userSimpleInfoDto : followList) {
-            userSimpleInfoDto.setRequestedUsername(requestedUsername);
-            if(profileUsername.equals(requestedUsername)) {
+            userSimpleInfoDto.setRequestingUsername(requestingUsername);
+            if(userSimpleInfoDto.getUsername().equals(requestingUsername)) continue;
+            if(username.equals(requestingUsername)) {
                 userSimpleInfoDto.setFollowStatus(FollowStatus.FOLLOWING);
             }
-            else if(userSimpleInfoDto.getUsername().equals(requestedUsername)) {
-                userSimpleInfoDto.setFollowStatus(FollowStatus.ONESELF);
-            }
             else {
-                User toUser = userRepository.findByUsername(userSimpleInfoDto.getUsername()).orElseThrow(UserException::new);
-                if(isFollowingById(toUser.getId(), requestedUser.getId()))
+                User userFollowByToUser = userRepository.findByUsername(userSimpleInfoDto.getUsername()).orElseThrow(UserException::new);
+                if(isFollowingById(userFollowByToUser.getId(), requestingUser.getId()))
                     userSimpleInfoDto.setFollowStatus(FollowStatus.FOLLOWING);
                 else
                     userSimpleInfoDto.setFollowStatus(FollowStatus.UNFOLLOW);
