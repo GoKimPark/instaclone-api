@@ -33,14 +33,14 @@ public class FollowController {
 
     @GetMapping("/follower/{username}/{requestingUsername}")
     public String getFollower(@PathVariable String username, @PathVariable String requestingUsername, Model model){
-        List<UserSimpleInfoDto> followerList = followService.getFollowRelationList("follower", username, requestingUsername);
+        List<UserSimpleInfoDto> followerList = followService.getFollowerList(username, requestingUsername);
         model.addAttribute("users", followerList);
         return "/account/userList";
     }
 
     @GetMapping("/following/{username}/{requestingUsername}")
     public String getFollowing(@PathVariable String username, @PathVariable String requestingUsername, Model model){
-        List<UserSimpleInfoDto> followingList = followService.getFollowRelationList("following", username, requestingUsername);
+        List<UserSimpleInfoDto> followingList = followService.getFollowingList(username, requestingUsername);
         model.addAttribute("users", followingList);
         return "/account/userList";
     }

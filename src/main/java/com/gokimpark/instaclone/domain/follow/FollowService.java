@@ -55,33 +55,47 @@ public class FollowService {
         if(toUsername.equals(fromUsername)) throw new FollowException("follower 와 following 의 대상이 동일합니다.");
     }
 
-    public List<UserSimpleInfoDto> getFollowRelationList(String follow, String username, String requestingUsername){
+    public List<UserSimpleInfoDto> getFollowerList(String username, String requestingUsername){
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
         User requestingUser = userRepository.findByUsername(requestingUsername).orElseThrow(UserException::new);
 
-        List<UserSimpleInfoDto> followList = null;
-        if(follow.equals("following")) {
-            followList = followRepository.findAllByFromUser(user.getId());
-        }
-        else if(follow.equals("follower")) {
-            followList = followRepository.findAllByToUser(user.getId());
-        }
-        assert followList != null;
-        for(UserSimpleInfoDto userSimpleInfoDto : followList) {
-            userSimpleInfoDto.setRequestingUsername(requestingUsername);
-            if(userSimpleInfoDto.getUsername().equals(requestingUsername)) continue;
-            if(username.equals(requestingUsername)) {
-                userSimpleInfoDto.setFollowStatus(FollowStatus.FOLLOWING);
-            }
-            else {
-                User userFollowByToUser = userRepository.findByUsername(userSimpleInfoDto.getUsername()).orElseThrow(UserException::new);
-                if(isFollowingById(userFollowByToUser.getId(), requestingUser.getId()))
-                    userSimpleInfoDto.setFollowStatus(FollowStatus.FOLLOWING);
-                else
-                    userSimpleInfoDto.setFollowStatus(FollowStatus.UNFOLLOW);
+        List<UserSimpleInfoDto>  usersWhoFollowedUser = followRepository.findAllByToUser(user.getId());
+        if(username.equals(requestingUsername)) {
+            for(UserSimpleInfoDto userInfo : usersWhoFollowedUser) {
+                userInfo.setRequestingUsername(username);
+                User targetUser = userRepository.findByUsername(userInfo.getUsername()).orElseThrow(UserException::new);
+                setFollowStatus(userInfo, targetUser.getId(), user.getId());
             }
         }
-        return followList;
+        else {
+            for(UserSimpleInfoDto userInfo : usersWhoFollowedUser) {
+                userInfo.setRequestingUsername(requestingUsername);
+                User targetUser = userRepository.findByUsername(userInfo.getUsername()).orElseThrow(UserException::new);
+                setFollowStatus(userInfo, targetUser.getId(), requestingUser.getId());
+            }
+        }
+        return usersWhoFollowedUser;
+    }
+
+    public List<UserSimpleInfoDto> getFollowingList(String username, String requestingUsername) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
+        User requestingUser = userRepository.findByUsername(requestingUsername).orElseThrow(UserException::new);
+
+        List<UserSimpleInfoDto> usersFollowedByUser = followRepository.findAllByFromUser(user.getId());
+        if(username.equals(requestingUsername)) {
+            for(UserSimpleInfoDto userInfo : usersFollowedByUser) {
+                userInfo.setRequestingUsername(username);
+                userInfo.setFollowStatus(FollowStatus.FOLLOWING);
+            }
+        }
+        else {
+            for(UserSimpleInfoDto userInfo : usersFollowedByUser) {
+                userInfo.setRequestingUsername(requestingUsername);
+                User targetUser = userRepository.findByUsername(userInfo.getUsername()).orElseThrow(UserException::new);
+                setFollowStatus(userInfo, targetUser.getId(), requestingUser.getId());
+            }
+        }
+        return usersFollowedByUser;
     }
 
     public Long getFollowingCount(String username){
@@ -111,5 +125,14 @@ public class FollowService {
         User toUser = userRepository.findByUsername(toUsername).orElseThrow(UserException::new);
         User fromUser = userRepository.findByUsername(fromUsername).orElseThrow(UserException::new);
         return isFollowingById(toUser.getId(), fromUser.getId());
+    }
+
+    public void setFollowStatus(UserSimpleInfoDto userInfo, Long toUserId, Long fromUserId) {
+        if(toUserId.equals(fromUserId))
+            userInfo.setFollowStatus(FollowStatus.ONESELF);
+        else if(isFollowingById(toUserId, fromUserId))
+            userInfo.setFollowStatus(FollowStatus.FOLLOWING);
+        else
+            userInfo.setFollowStatus(FollowStatus.UNFOLLOW);
     }
 }
