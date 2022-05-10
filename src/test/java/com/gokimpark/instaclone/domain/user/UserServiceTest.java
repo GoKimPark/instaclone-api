@@ -21,56 +21,45 @@ public class UserServiceTest {
     @Autowired UserRepository userRepository;
 
     @Test
-    @Transactional
     public void createAccount() throws Exception {
-        JoinDto joinDto = new JoinDto();
-        joinDto.setEmail("abc@gmail.com");
-        joinDto.setName("kim");
-        joinDto.setUsername("id123");
-        joinDto.setPassword("pass1234");
-
+        JoinDto joinDto = user1JoinDto();
         UserDto savedUser = userService.createAccount(joinDto);
 
-        assertEquals(savedUser.getId(), userRepository.findByUsername("id123").get().getId());
+        assertEquals(savedUser.getId(), userRepository.findByUsername("apple").get().getId());
     }
 
     @Test
-    @Transactional
     public void login() throws Exception {
-
-        JoinDto joinDto = new JoinDto();
-        joinDto.setEmail("abc@gmail.com");
-        joinDto.setName("kim");
-        joinDto.setUsername("id123");
-        joinDto.setPassword("pass1234");
-
+        JoinDto joinDto = user1JoinDto();
         UserDto user = userService.createAccount(joinDto);
 
-        User findUser = userRepository.findByUsername("id123").orElseThrow(Exception::new);
-        UserDto login = userService.login("id123", "pass1234");
+        User findUser = userRepository.findByUsername("apple").orElseThrow(Exception::new);
+        UserDto login = userService.login("apple", "pass1234");
 
         assertEquals(findUser.getUsername(), login.getUsername());
         assertEquals(findUser.getPassword(), login.getPassword());
     }
 
     @Test
-    @Transactional
     public void update() throws Exception {
-        JoinDto joinDto = new JoinDto();
-        joinDto.setEmail("abc@gmail.com");
-        joinDto.setName("kim");
-        joinDto.setUsername("id123");
-        joinDto.setPassword("pass1234");
-
+        JoinDto joinDto = user1JoinDto();
         UserDto account = userService.createAccount(joinDto);
 
         EditDto editDto = new EditDto();
         editDto.setUserId(account.getId());
         editDto.setName("Lee");
-        editDto.setUsername("id789");
-        editDto.setEmail("abc@naver.com");
+        editDto.setUsername("kiwi");
         UserDto updateProfile = userService.updateProfile(editDto);
 
-        assertEquals("id789", updateProfile.getUsername());
+        assertEquals("kiwi", updateProfile.getUsername());
+    }
+
+    private static JoinDto user1JoinDto() {
+        JoinDto joinDto = new JoinDto();
+        joinDto.setEmail("apple@gmail.com");
+        joinDto.setName("kim");
+        joinDto.setUsername("apple");
+        joinDto.setPassword("pass1234");
+        return joinDto;
     }
 }
