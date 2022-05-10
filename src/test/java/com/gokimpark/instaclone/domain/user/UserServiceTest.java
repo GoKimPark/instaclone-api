@@ -1,9 +1,11 @@
 package com.gokimpark.instaclone.domain.user;
 
+import com.gokimpark.instaclone.domain.exception.AccountException;
 import com.gokimpark.instaclone.domain.user.dto.UserDto;
 import com.gokimpark.instaclone.web.user.dto.EditDto;
 import com.gokimpark.instaclone.web.user.dto.JoinDto;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +28,18 @@ public class UserServiceTest {
         UserDto savedUser = userService.createAccount(joinDto);
 
         assertEquals(savedUser.getId(), userRepository.findByUsername("apple").get().getId());
+    }
+
+    @Test
+    public void createAccountException() throws Exception {
+        JoinDto user1JoinDto = user1JoinDto();
+        JoinDto user2JoinDto = user2JoinDto();
+
+        UserDto user1UserDto = userService.createAccount(user1JoinDto);
+        assertEquals(user1UserDto.getUsername(), user1UserDto.getUsername());
+
+        Assertions.assertThrows(AccountException.class,
+                () -> userService.createAccount(user2JoinDto));
     }
 
     @Test
@@ -60,6 +74,15 @@ public class UserServiceTest {
         joinDto.setName("kim");
         joinDto.setUsername("apple");
         joinDto.setPassword("pass1234");
+        return joinDto;
+    }
+
+    static JoinDto user2JoinDto() {
+        JoinDto joinDto = new JoinDto();
+        joinDto.setEmail("kiwi456@gmail.com");
+        joinDto.setName("lee");
+        joinDto.setUsername("apple");
+        joinDto.setPassword("pass7890");
         return joinDto;
     }
 }
