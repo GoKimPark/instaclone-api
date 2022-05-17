@@ -24,8 +24,8 @@ Table Comment as C {
 }
 
 Table Follow as F {
-  toUser Long [pk, ref: > U.id]
-  fromUser Long [pk, ref: > U.id]
+  toUser Long
+  fromUser Long
 }
 
 Table Likes as L {
