@@ -59,7 +59,9 @@ public class FollowService {
 
     public List<UserSimpleInfoDto> getFollowerList(String username, String requestingUsername){
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
-        User requestingUser = userRepository.findByUsername(requestingUsername).orElseThrow(UserException::new);
+        User requestingUser;
+        if(requestingUsername.equals(username)) requestingUser = user;
+        else requestingUser = userRepository.findByUsername(requestingUsername).orElseThrow(UserException::new);
 
         List<UserSimpleInfoDto>  usersWhoFollowedUser = followRepository.findAllByToUser(user.getId());
         if(username.equals(requestingUsername)) {
@@ -80,7 +82,9 @@ public class FollowService {
 
     public List<UserSimpleInfoDto> getFollowingList(String username, String requestingUsername) {
         User user = userRepository.findByUsername(username).orElseThrow(UserException::new);
-        User requestingUser = userRepository.findByUsername(requestingUsername).orElseThrow(UserException::new);
+        User requestingUser;
+        if(requestingUsername.equals(username)) requestingUser = user;
+        else requestingUser = userRepository.findByUsername(requestingUsername).orElseThrow(UserException::new);
 
         List<UserSimpleInfoDto> usersFollowedByUser = followRepository.findAllByFromUser(user.getId());
         if(username.equals(requestingUsername)) {
