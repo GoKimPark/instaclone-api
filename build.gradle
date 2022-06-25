@@ -19,21 +19,21 @@ repositories {
 }
 
 dependencies {
-    implementation 'mysql:mysql-connector-java:8.0.28'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.6'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.6.6'
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.6'
-    implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.6'
-    implementation 'org.springframework.boot:spring-boot-starter-aop:2.6.6'
-    implementation 'org.springframework.boot:spring-boot-devtools:2.6.7'
+    implementation 'mysql:mysql-connector-java:8.0.29'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.0'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.0'
+    implementation 'org.springframework.boot:spring-boot-starter-aop:2.7.0'
+    implementation 'org.springframework.boot:spring-boot-devtools:2.7.0'
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
 
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    runtimeOnly 'mysql:mysql-connector-java:8.0.28'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.29'
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.6'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.0'
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
