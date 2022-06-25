@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -63,21 +60,21 @@ public class FollowService {
         if(requestingUsername.equals(username)) requestingUser = user;
         else requestingUser = userRepository.findByUsername(requestingUsername).orElseThrow(UserException::new);
 
-        List<UserSimpleInfoDto>  usersWhoFollowedUser = followRepository.findAllByToUser(user.getId());
+        List<UserSimpleInfoDto> users = getAllByToUser(user.getId());
         if(username.equals(requestingUsername)) {
             Set<String> usernameFollowedByUser = getAllUsernameFollowedByUser(user.getId());
-            for(UserSimpleInfoDto userInfo : usersWhoFollowedUser) {
+            for(UserSimpleInfoDto userInfo : users) {
                 setFollowStatus(userInfo.getUsername(), user.getUsername(), usernameFollowedByUser, userInfo);
             }
         }
         else {
             Set<String> usernameFollowedByRequestingUser = getAllUsernameFollowedByUser(requestingUser.getId());
-            for(UserSimpleInfoDto userInfo : usersWhoFollowedUser) {
+            for(UserSimpleInfoDto userInfo : users) {
                 userInfo.setRequestingUsername(requestingUsername);
                 setFollowStatus(userInfo.getUsername(), requestingUser.getUsername(), usernameFollowedByRequestingUser, userInfo);
             }
         }
-        return usersWhoFollowedUser;
+        return users;
     }
 
     public List<UserSimpleInfoDto> getFollowingList(String username, String requestingUsername) {
@@ -86,21 +83,21 @@ public class FollowService {
         if(requestingUsername.equals(username)) requestingUser = user;
         else requestingUser = userRepository.findByUsername(requestingUsername).orElseThrow(UserException::new);
 
-        List<UserSimpleInfoDto> usersFollowedByUser = followRepository.findAllByFromUser(user.getId());
+        List<UserSimpleInfoDto> users = getAllByFromUser(user.getId());
         if(username.equals(requestingUsername)) {
-            for(UserSimpleInfoDto userInfo : usersFollowedByUser) {
+            for(UserSimpleInfoDto userInfo : users) {
                 userInfo.setRequestingUsername(username);
                 userInfo.setFollowStatus(FollowStatus.FOLLOWING);
             }
         }
         else {
             Set<String> usernameFollowedByRequestingUser = getAllUsernameFollowedByUser(requestingUser.getId());
-            for(UserSimpleInfoDto userInfo : usersFollowedByUser) {
+            for(UserSimpleInfoDto userInfo : users) {
                 userInfo.setRequestingUsername(requestingUsername);
                 setFollowStatus(userInfo.getUsername(), requestingUsername, usernameFollowedByRequestingUser, userInfo);
             }
         }
-        return usersFollowedByUser;
+        return users;
     }
 
     public Long getFollowingCount(String username){
@@ -142,13 +139,29 @@ public class FollowService {
     }
 
     public Set<String> getAllUsernameFollowedByUser(Long userId) {
-        List<UserSimpleInfoDto> followRelationList = followRepository.findAllByFromUser(userId);
-
+        List<User> users = followRepository.findAllByFromUser(userId);
         Set<String> usernameSet = new HashSet<>();
-        for(UserSimpleInfoDto userSimpleInfo : followRelationList) {
-            usernameSet.add(userSimpleInfo.getUsername());
+        for(User user : users) {
+            usernameSet.add(user.getUsername());
         }
         return usernameSet;
     }
 
+    public List<UserSimpleInfoDto> getAllByToUser(Long userId) {
+        List<User> users = followRepository.findAllByToUser(userId);
+        List<UserSimpleInfoDto> followerList = new ArrayList<>();
+        for(User user : users) {
+            followerList.add(new UserSimpleInfoDto(user.getUsername(), user.getName()));
+        }
+        return followerList;
+    }
+
+    public List<UserSimpleInfoDto> getAllByFromUser(Long userId) {
+        List<User> users = followRepository.findAllByFromUser(userId);
+        List<UserSimpleInfoDto> followingList = new ArrayList<>();
+        for(User user : users) {
+            followingList.add(new UserSimpleInfoDto(user.getUsername(), user.getName()));
+        }
+        return followingList;
+    }
 }
