@@ -39,15 +39,15 @@ public class FollowApiController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/follower/{profileUsername}/{requestedUsername}")
-    public ResponseEntity<?> getFollower(@PathVariable String profileUsername, @PathVariable String requestedUsername){
-        List<UserSimpleInfoDto> followerList = followService.getFollowerList(profileUsername, requestedUsername);
+    @GetMapping("/follower/{profileUsername}/{requestingUsername}")
+    public ResponseEntity<?> getFollower(@PathVariable String profileUsername, @PathVariable String requestingUsername){
+        List<UserSimpleInfoDto> followerList = followService.getFollowerList(profileUsername, requestingUsername);
         return new ResponseEntity<>(followerList, HttpStatus.OK);
     }
 
-    @GetMapping("/following/{profileUsername}/{requestedUsername}")
-    public ResponseEntity<?> getFollowing(@PathVariable String profileUsername, @PathVariable String requestedUsername){
-        List<UserSimpleInfoDto> followingList = followService.getFollowingList(profileUsername, requestedUsername);
+    @GetMapping("/following/{profileUsername}/{requestingUsername}")
+    public ResponseEntity<?> getFollowing(@PathVariable String profileUsername, @PathVariable String requestingUsername){
+        List<UserSimpleInfoDto> followingList = followService.getFollowingList(profileUsername, requestingUsername);
         return new ResponseEntity<>(followingList, HttpStatus.OK);
     }
 }

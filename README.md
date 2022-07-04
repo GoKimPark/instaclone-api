@@ -2,194 +2,69 @@
 
 ![png](/_image/diagram.png)
 
-## 기능
+<br>
 
-- [Account](#Account)
-- [Profile](#Profile)
-- [Follow Relationship](#Relation)
+# 기능
 
-## Account
-
-계정을 생성 및 삭제하고 로그인을 처리한다.
-
-### createAccount 계정 생성
-
-#### AccountController
-
-- ```email```, ```name(주민등록상 이름)```, ```username(활동 아이디)```, ```password``` 4가지 형식인 JoinDto 를 입력받는다.
-- ```email```, ```username(활동 아이디)``` 가 기존 회원들과 중복되지 않는다면 해당 형식으로 가입이 가능하다.
-- 가입 가능하다면 UserDto 로 변경 후 service 에게 넘긴다.
-
-#### UserService
-
-- controller 에게 JoinDto 를 넘겨받는다.
-- JoinDto 를 ```User entity``` 로 변경후 ```UserRepository``` 에게 넘겨준다.
+- 계정: https://github.com/evelyn82ny/instagram-api/blob/main/_review/account.md
+- 프로필: https://github.com/evelyn82ny/instagram-api/blob/main/_review/profile.md
 
 <br>
 
-### login 로그인
+# issues
 
-#### AccountController 
+## 사용자 간의 관계
 
-- ```loginId```, ```password``` 2가지 형식인 LoginDto 를 입력받는다.
-- ```loginId``` 에는 ```email``` 또는 ```username(활동 아이디)``` 를 입력할 수 있다.
-  - 현재 ```username(활동 아이디)``` 만 입력 가능하다.
+> 자세한 내용은 https://velog.io/@evelyn82ny/instagram-follow 에서 확인 가능합니다.
 
-#### UserService
+![png](/_image/failed_attempt2_diagram.png)
 
-- ```email``` 또는 ```username(활동 아이디)``` 가 존재한다면 비밀번호를 확인한다.
-- 비밀번호가 다를경우 ```UserException``` 을 날린다.
+초기에는 Follow 객체가 fromUser(관계를 요청하는 사용자)와 toUser(다른 사용자에 의해 관계가 변하는 사용자)를 @ManyToOne 으로 참조하도록 구현했다.
+즉, Follow 와 User 는 연관 관계이다. 연관 관계란 서로가 연간이 있다는 뜻인데 여기서 의문이 생겼다.<br>
 
-<br>
+**Follow와 User의 관계**일까? **User와 User의 관계**일까?
+고민 끝에 내린 결론은 **Follow 관계는 User와 User의 관계**이므로 연관 관계가 필요하지 않다고 판단했다.<br>
 
-### deleteAccount 계정 삭제
-
-#### AccountController & UserService
-
-- ```username(활동 아이디)``` 으로 계정을 삭제할 수 있다.
-- 해당 계정과 관련된 ```follower```, ```following``` 관계를 모두 삭제한다.
-- 해당 계정의 ```post(게시물)``` 을 모두 삭제한다.
+이를 위해 연관 관계 대신 두 사용자의 변하지 않는 id 값으로 **복합키**를 생성했다.
+id 값은 변하지 않기 때문에 사용자가 데이터를 변경해도 **Follow 객체가 영향을 받지 않는다**.
+또한, 중복되지도 않는다.
 
 <br>
 
-## Profile
+![png](/_image/clustered_index.png)
 
-사용자의 프로필 화면을 출력하고, 프로필 내용을 수정한다.
+하지만 **Full Table Scan** 이라는 새로운 문제가 발생한다.<br>
 
-### getProfile 프로필 화면 출력하기
-
-#### ProfileController
-
-- ```username(활동 아이디)``` 을 입력받으면 프로필 화면에 출력할 해당 아이디에 대한 정보를 반환한다.
-- ```ProfileUserInfoDto``` 에 ```posCount(게시물 수)```, ```followerCount(팔로워 수)```, ```followingCount(팔로잉 수)``` 정보를 저장한다.
-- 프로필 화면 출력시 ```post(게시물)``` 도 함께 출력되므로 ```PostProfileDto``` 에 게시물 url 을 저장한다.
-  - 현재 게시물 기능을 구현하지 않음
-- ```followerCount(팔로워 수)```, ```followingCount(팔로잉 수)``` 필드는 실제 관계가 아닌 개수만 가져온다.
-- 사용자가 ```followerCount(팔로워 수)```, ```followingCount(팔로잉 수)``` 필드를 눌렀을 때 해당 정보를 다시 탐색하여 가져온다.
-- 기본 정보인 ```ProfileUserInfoDto``` 와 게시물 정보인 ```PostProfileDto``` list 를 함께 처리하는 ``` ProfileDto``` 로 최종 반환한다.
+복합키는 Clustered Index로 생성되며 from_user, to_user 알파벳 순으로 정렬된다. 
+id가 1인 사용자가 id가 3인 사용자를 팔로우 했다면 위와 같이 중간에 삽입된다.
+즉, 순서가 바뀌기 때문에 이를 로드하는 Page도 계속해서 수정해야하는 문제가 발생한다.
 
 <br>
 
-### 프로필 정보 수정 
+![png](/_image/full_table_scan.png)
 
-#### getProfileEditDto 
+id가 2인 사용자가 팔로우하는 관계를 가져온다면 from_user 칼럼이 기준이다. 
+왼쪽을 보면 알 수 있듯이 from_user 칼럼으로 먼저 정렬되기 때문에 Range Scan이 가능하다.<br>
 
-- 입력받은 ```username(활동 아이디)``` 에 대한 정보를 ```EditDto``` 로 반환한다.
+하지만 id가 2인 사용자를 팔로우하는 관계를 가져온다면 to_user 칼럼이 기준이다. 
+오른쪽을 보면 알 수 있듯이 from_user 칼럼으로 정렬된 다음 to_user 칼럼으로 정렬되므로 결국은 full table scan을 한다.<br>
 
-#### updateProfile
-
-- 수정하려고 하는 정보를 ```EditDto``` 로 넘겨받고 처리한다.
-
-<br>
-
-## Relation
-
-- follower : 나의 인스타그램을 follow 하는 사용자
-- following : 내가 follow 하고 있는 사용자
-
-FOLLOW 관계를 효율적으로 관리하는 방법을 계속해서 변경하는 중이며 아래 링크에 FOLLOW 관계에 대해 시도했던 과정을 작성했다.
-
-> https://velog.io/@evelyn82ny/instagram-follow
-
-아래 내용은 위 게시물(링크)에 작성한 내용을 간략히 간추린 내용입니다.
-
-### Failed Attempt 1: List
-
-```User entity``` 에 ```follower list```, ```following list``` 필드를 갖도록 구현했다.
-
-```java
-public class User {
-    
-    private List<Long> followerList;
-    private List<Long> followingList;
-}
-```
-
-```user A``` 가 ```user B``` 를 unfollow 했다면 **2가지**를 처리해야한다.
-
-- ```user A``` 의 ```following list``` 필드에서 ```user B``` 를 삭제
-- ```user B``` 의 ```follower list``` 필드에서 ```user A``` 를 삭제
-
-```user A``` 가 요청한 처리에 대해 ```user A``` 의 정보에만 접근하는 것이 아니고 ```user B``` 의 정보에서 접근해야 한다. 즉, 이는 위험하다고 판단해 해당 로직을 사용하지 않기도 함.
+만약 서비스가 커진다면 full table scan은 성능 이슈가 될 것이다. 
+그러므로 이를 해결할 수 있는 새로운 방법이 필요하지만 아직 찾지 못했다.
 
 <br>
 
-### Failed Attempt 2: Follow class
+## 부가 기능
 
-- from_user : 나 자신
-- to_user : 내가 follow 하는 사용자
+> 자세한 내용은 https://velog.io/@evelyn82ny/Spring-AOP-Aspect 에서 확인 가능합니다.
 
-```java
-@Entity
-public class Follow {
+![png](/_image/TraceAspect_result.png)
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+JPA를 공부하면서 불필요한 Query 발생을 줄이는 것도 중요하다고 느꼈다.
+Query 발생을 파악하고자 콘솔에 찍힌 로그를 확인했지만 사실상 너무 많아 구분하기 어려웠다.
+고민 끝에 Query가 발생한 메소드명을 출력하는 부가 기능이 있다면 불필요한 Query 발생을 최소화하는 과정을 **효율적 처리할 수 있을 것**이라고 생각했다.<br>
 
-  @ManyToOne  // default EAGER
-  @JoinColumn(name = "to_user")
-  private User toUser;
+처음에는 핵심 코드에 부가 기능을 적용했지만 같은 부가 기능 코드가 중복되고 핵심 기능을 한눈에 알아보기 힘들다는 문제가 발생했다.
+그래서 여러 디자인 패턴을 공부했고 Proxy, Decorator Pattern 을 통해 Proxy 객체로 부가 기능을 적용할 수 있다는 것을 알게 되었다.<br>
 
-  @ManyToOne
-  @JoinColumn(name = "from_user")
-  private User fromUser;
-
-  public Follow(User toUser, User fromUser){
-    this.toUser = toUser;
-    this.fromUser = fromUser;
-  }
-}
-```
-
-Failed Attempt1에서 발생한 Follow 관계에서 ```toUser``` 객체의 직접 접근을 막기 위해 ```toUser```와 ```fromUser``` field를 갖는 Follow class 생성했다.<br>
-
-```Followers(팔로워 목록)```, ```Following(팔로잉 목록)```을 가져오는 과정에서 **JPA N+1 query 문제가 발생**한다.
-
-<br>
-
-### Failed Attempt 3: Composite key로 변경
-
-Failed Attempt 2의 Follow class에서 Id field는 사실상 필요없다고 판단해 ```toUser```와 ```fromUser```를 복합키로 변경했다.
-
-```java
-public class Follow {
-
-    @Id
-    @Column(name = "to_user")
-    private Long toUser;
-
-    @Id
-    @Column(name = "from_user")
-    private Long fromUser;
-}
-```
-
-```from_user``` 와 ```to_user``` field는 User 객체의```ID field``` 값만 갖는다.<br>
-
-```user A``` 가 ```user B``` 를 unfollow 했다면 ```user B``` 데이터에 접근할 필요없이 ```user B(toUser) - user A(fromUser)``` 관계만 제거하면 된다.<br>
-
-하지만 여전히 **follower, following list** 를 가져오는 로직에서 JPA N+1 query 문제가 발생한다.
-
-- Follow entity 는 User 의 id 를 참조하는 것이 아니라 **User 의 id 값**만 가지고 있다. 
-- 즉, Follow Table와 User Table는 서로 연관이 없다.
-- 그래서 UserRepository 에서 User id 값과 일치하는 User 를 찾아야 하기 때문에 N + 1 문제가 발생한다.
-
-<br>
-
-## Attempt 4: @Query 사용
-
-```java
-@Query(value = "select new com...파일 경로...FollowSimpleListDto(u.username, u.name)"
-        + "from Follow f JOIN User u"
-        + "ON f.fromUser = u.id where f.toUser = :userId")
-List<FollowSimpleListDto> findAllByToUser(@Param("userId") Long userId);
-```
-
-```@Query```를 사용해 JPA N+1 query 문제를 해결했다.
-
-- Follow 와 User table을 JOIN 해 일치하는 Instance를 가지고 온다.
-- 해당 Instance의 정보 중 필요한 정보만 Dto에 mapping 한다.
-
-```@Query```를 사용해 JPA N+1 query 문제를 해결했지만 출력되는 정보가 변경되면 ```@Query```를 수정해야된다.
-즉, 활용성이 떨어진다. 하지만 여태까지 좋은 방법을 찾지 못했다.
+Spring AOP를 통해 Proxy 객체로 부가 기능을 적용해 효율적인 작업을 할 수 있었고 **핵심 기능에 부가 기능 코드가 추가 되지 않으니 유지 보수가 좋은 코드를 유지**할 수 있었다.

@@ -3,6 +3,7 @@ package com.gokimpark.instaclone.domain.follow;
 import com.gokimpark.instaclone.domain.exception.FollowException;
 import com.gokimpark.instaclone.domain.user.UserService;
 import com.gokimpark.instaclone.domain.user.dto.UserDto;
+import com.gokimpark.instaclone.domain.user.dto.UserSimpleInfoDto;
 import com.gokimpark.instaclone.web.user.dto.JoinDto;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -57,6 +58,34 @@ public class FollowServiceTest {
         assertThrows(FollowException.class, () -> followService.unFollow(user2.getUsername(), user2.getUsername()));
     }
 
+    @Test
+    public void getFollowingList() {
+        List<UserDto> users = createUsers();
+        UserDto user1 = users.get(0);
+        UserDto user2 = users.get(1);
+        UserDto user3 = users.get(2);
+
+        followService.addFollow(user2.getUsername(), user1.getUsername());
+        followService.addFollow(user3.getUsername(), user1.getUsername());
+
+        List<UserSimpleInfoDto> followingList = followService.getFollowingList(user1.getUsername(), user1.getUsername());
+        assertEquals(2, followingList.size());
+    }
+
+    @Test
+    public void getFollowerList() {
+        List<UserDto> users = createUsers();
+        UserDto user1 = users.get(0);
+        UserDto user2 = users.get(1);
+        UserDto user3 = users.get(2);
+
+        followService.addFollow(user1.getUsername(), user2.getUsername());
+        followService.addFollow(user1.getUsername(), user3.getUsername());
+
+        List<UserSimpleInfoDto> followerList = followService.getFollowerList(user1.getUsername(), user1.getUsername());
+        assertEquals(2, followerList.size());
+    }
+
     public List<UserDto> createUsers()  {
         List<UserDto> users = new ArrayList<>();
 
@@ -73,6 +102,13 @@ public class FollowServiceTest {
         joinDto2.setUsername("id456");
         joinDto2.setPassword("pass4567");
         users.add(userService.createAccount(joinDto2));
+
+        JoinDto joinDto3 = new JoinDto();
+        joinDto3.setEmail("kaya1234@gmail.com");
+        joinDto3.setName("kaya");
+        joinDto3.setUsername("id789");
+        joinDto3.setPassword("pass7890");
+        users.add(userService.createAccount(joinDto3));
         return users;
     }
 }
