@@ -3,7 +3,6 @@
 ![png](/_image/diagram.png)
 
 <br>
-
 # 기능
 
 - 계정: https://github.com/evelyn82ny/instagram-api/blob/main/_review/account.md
@@ -12,7 +11,6 @@
 <br>
 
 # issues
-
 ## 사용자 간의 관계
 
 > 자세한 내용은 https://velog.io/@evelyn82ny/instagram-follow 에서 확인 가능합니다.
@@ -28,7 +26,6 @@
 이를 위해 연관 관계 대신 두 사용자의 변하지 않는 id 값으로 **복합키**를 생성했다.
 id 값은 변하지 않기 때문에 사용자가 데이터를 변경해도 **Follow 객체가 영향을 받지 않는다**.
 또한, 중복되지도 않는다.
-
 <br>
 
 ![png](/_image/clustered_index.png)
